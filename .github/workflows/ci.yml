@@ -32,3 +32,15 @@ jobs:
 
       - name: Test
         run: pytest
+
+      - name: Format
+        run: ruff format --check .
+
+      - name: Type check
+        run: mypy jamf_resource_deleter
+
+      - name: Build package
+        run: python -m build
+
+      - name: Security scan
+        run: bandit -r jamf_resource_deleter/
