@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jamf-resource-deleter"
-version = "0.1.0"
+version = "0.2.0"
 description = "A module that reads JSON files of Jamf resources (IDs) and deletes them"
 readme = "README.md"
 authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
@@ -13,7 +13,7 @@ dependencies = [
     "requests>=2.31.0",
     "json",
     "pathlib",
-    "jamfpy @ https://github.com/thejoeker12/jamfpy-python-sdk-jamfpro"
+    "jamfpy"
 ]
 
 [project.urls]
