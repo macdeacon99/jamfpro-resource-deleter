@@ -1,0 +1,1 @@
+# jamfpro-resource-deleter
