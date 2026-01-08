@@ -9,7 +9,12 @@ description = "A module that reads JSON files of Jamf resources (IDs) and delete
 readme = "README.md"
 authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
 license = {text = "Apache 2.0"}
-dependencies = []
+dependencies = [
+    "requests>=2.31.0",
+    "json",
+    "pathlib",
+    "jamfpy @ https://github.com/thejoeker12/jamfpy-python-sdk-jamfpro"
+]
 
 [project.urls]
 Homepage = "https://github.com/macdeacon99/jamfpro-resource-deleter"
