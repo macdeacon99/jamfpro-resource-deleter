@@ -9,11 +9,15 @@ description = "A module that reads JSON files of Jamf resources (IDs) and delete
 readme = "README.md"
 authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
 license = {text = "Apache 2.0"}
+requires-python = ">=3.9"
 dependencies = [
     "requests>=2.31.0",
     "json",
     "pathlib",
     "jamfpy"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
 ]
 
 [project.urls]
