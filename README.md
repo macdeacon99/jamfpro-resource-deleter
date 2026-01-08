@@ -157,6 +157,34 @@ You may supply **one or more JSON files**.
 
 Each file must contain an array of objects with at minimum:
 
-id – Jamf Pro resource ID
+- `resourceType` - Jamf Pro resource type
+- `id` – Jamf Pro resource ID
+- `name` – Human-readable name (used for logging / validation)
 
-name – Human-readable name (used for logging / validation)
+#### Example
+
+```json
+{
+    "unusedComputerProfiles": [{
+        "id": 12,
+        "name": "Restrictions"
+    }]
+}
+```
+
+Each resource type has to match the following naming convention:
+
+| JSON Key                     | Jamf Resource Type              | Delete Method                                 |
+|-----------------------------|----------------------------------|-----------------------------------------------|
+| `unusedComputerGroups`      | Computer Groups                  | `_delete_computer_group`                      |
+| `unusedMacApps`             | macOS Applications               | `_delete_apps`                                |
+| `unusedMobileDeviceApps`    | Mobile Device Applications       | `_delete_apps`                                |
+| `unusedPackages`            | Packages                         | `_delete_packages`                            |
+| `unusedPolicies`            | Policies                         | `_delete_policies`                            |
+| `unusedComputerProfiles`    | Computer Configuration Profiles  | `_delete_profiles`                            |
+| `unusedScripts`             | Scripts                          | `_delete_scripts`                             |
+| `unusedComputerEAs`         | Computer Extension Attributes    | `_delete_computer_extension_attributes`       |
+| `unusedRestrictedSoftware`  | Restricted Software              | `_delete_restricted_software`                 |
+
+---
+
