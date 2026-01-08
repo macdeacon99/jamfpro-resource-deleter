@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jamf-resource-deleter"
+version = "0.1.0"
+description = "A module that reads JSON files of Jamf resources (IDs) and deletes them"
+readme = "README.md"
+authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
+license = {text = "Apache 2.0"}
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/macdeacon99/jamfpro-resource-deleter"
