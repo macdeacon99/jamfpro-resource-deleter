@@ -61,15 +61,12 @@ The exact supported resources depend on JamfPy API coverage, but typically inclu
 
 ```py
 import os
-from dotenv import load_dotenv
 from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
 import jamfpy
 
-load_dotenv()
-
-client_id = os.environ.get("client_id")
-client_secrent = os.environ.get("client_secret")
-jamfpro_url = os.environ.get("jamf_url")
+client_id = "YOUR-CLIENT-ID"
+client_secrent = "YOUR-CLIENT-SECRET"
+jamfpro_url = "https://your-jamfpro-server.com"
 
 jamfpy_client = jamfpy.Tenant(
     fqdn = jamfpro_url,

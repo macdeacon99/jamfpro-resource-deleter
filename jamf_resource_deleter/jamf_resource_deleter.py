@@ -10,9 +10,16 @@ from requests import HTTPError
 
 
 class JamfResourceDeleter:
-    """Class that will workout which resources need deleted and then delete them"""
+    """
+    Class that will workout which resources need deleted and then delete them
+    """
 
     def __init__(self, jamfpy_client):
+        """Initialise the JamfResourceDeleter object
+
+        Args:
+            jamfpy_client (jamfpy.Tenant object): Pass a JamfPy instance to this method
+        """
         self.jamfpy_client: jamfpy.Tenant = jamfpy_client
 
         self.resource_handlers: Dict[str, Callable] = {
