@@ -172,7 +172,7 @@ Each file must contain an array of objects with at minimum:
 }
 ```
 
-Each resource type has to match the following naming convention:
+Each resource type has to match the following naming convention, this table is also the supported resources at time of writing:
 
 | JSON Key                     | Jamf Resource Type              | Delete Method                                 |
 |-----------------------------|----------------------------------|-----------------------------------------------|
