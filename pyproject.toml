@@ -22,3 +22,10 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/macdeacon99/jamfpro-resource-deleter"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "ruff",
+  "mypy"
+]
