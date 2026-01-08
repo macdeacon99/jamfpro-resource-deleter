@@ -5,6 +5,8 @@ import jamfpy
 from requests import HTTPError
 
 class JamfResourceDeleter:
+    """_summary_
+    """
     def __init__(self, jamfpy_client):
         self.jamfpy_client: jamfpy.Tenant = jamfpy_client
 
