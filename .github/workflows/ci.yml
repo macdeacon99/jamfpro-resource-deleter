@@ -38,9 +38,7 @@ jobs:
         run: ruff format --check .
 
       - name: Type check
-        run: |
-          mypy --install-types
-          mypy jamf_resource_deleter
+        run: mypy jamf_resource_deleter
 
       - name: Build package
         run: python -m build

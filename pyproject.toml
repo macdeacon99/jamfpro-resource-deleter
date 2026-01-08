@@ -25,7 +25,8 @@ dev = [
   "pytest",
   "ruff",
   "mypy",
-  "bandit"
+  "bandit",
+  "build"
 ]
 
 [tool.mypy]
