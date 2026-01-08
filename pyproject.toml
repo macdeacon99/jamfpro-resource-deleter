@@ -11,8 +11,7 @@ authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
 license = {text = "Apache 2.0"}
 requires-python = ">=3.9"
 dependencies = [
-    "requests>=2.31.0",
-    "jamfpy"
+    "requests>=2.31.0"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
