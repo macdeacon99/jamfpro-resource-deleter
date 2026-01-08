@@ -11,10 +11,7 @@ authors = [{name = "Gordon Deacon", email = "gdeacon99@gmail.com"}]
 license = {text = "Apache 2.0"}
 requires-python = ">=3.9"
 dependencies = [
-    "requests>=2.31.0",
-    "json",
-    "pathlib",
-    "jamfpy"
+    "requests>=2.31.0"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -22,3 +19,18 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/macdeacon99/jamfpro-resource-deleter"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "ruff",
+  "mypy",
+  "bandit",
+  "build"
+]
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
