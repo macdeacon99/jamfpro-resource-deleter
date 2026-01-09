@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.3...v0.4.4) (2026-01-09)
+
+
+### Bug Fixes
+
+* make response json ([#14](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/14)) ([0ae4661](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/0ae466156886f98154bd2bde755186b406c4a136))
+
 ## [0.4.3](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.2...v0.4.3) (2026-01-09)
 
 
