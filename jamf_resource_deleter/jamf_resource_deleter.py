@@ -281,7 +281,7 @@ class JamfResourceDeleter:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        session_backups = {}
+        session_backups: dict[dict] = {}
 
         for resource_type, resource_list in unused_resources.items():
             print(f"\nProcessing {resource_type}...")
