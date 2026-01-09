@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.0...v0.4.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* fix publish ([#8](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/8)) ([2987aa2](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/2987aa2c5897a48a8c4efbc706ae837d404475a9))
+
 ## [0.4.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.3.0...v0.4.0) (2026-01-09)
 
 
