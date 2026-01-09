@@ -10,9 +10,9 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 
 ## Roadmap
 
-[ ] Develop Restore Functionality
-[ ] Tidy Up
-[ ] Split into multiple files for future growth
+- [ ] Develop Restore Functionality
+- [ ] Tidy Up
+- [ ] Split into multiple files for future growth
 
 ---
 
