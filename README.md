@@ -24,7 +24,8 @@ This tool **permanently deletes Jamf Pro resources**.
 - Always validate your JSON input
 - Always test against a **non-production Jamf tenant first**
 - Review the resources to be deleted before running
-- There is a
+- There is a export method which should save most of the configuration, but the resources will be deleted
+- In the future, there will be a restore functionality which will re-create all of the deleted resources
 
 You are responsible for the changes made by this tool.
 
