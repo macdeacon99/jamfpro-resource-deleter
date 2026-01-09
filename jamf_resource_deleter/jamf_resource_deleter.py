@@ -41,10 +41,7 @@ class JamfResourceDeleter:
                 "delete": self._delete_computer_group,
                 "get": self._get_computer_groups,
             },
-            "unusedMacApps": {
-                "delete": self._delete_apps, 
-                "get": self._get_apps
-            },
+            "unusedMacApps": {"delete": self._delete_apps, "get": self._get_apps},
             "unusedMobileDeviceApps": {
                 "delete": self._delete_apps,
                 "get": self._get_apps,
@@ -113,8 +110,6 @@ class JamfResourceDeleter:
         """Delete a restricted software by ID"""
         return self.jamfpy_client.classic.restricted_software.delete_by_id(resource_id)
 
-
-
     # Get Methods
     def _get_computers(self, resource_id: int) -> Optional[Dict]:
         """Get computer configuration by ID"""
@@ -134,9 +129,11 @@ class JamfResourceDeleter:
 
     def _get_apps(self, resource_id: int) -> Optional[Dict]:
         """Get apps configuration by ID"""
-        print(f"App Installers cannot be exported - App Installed {resource_id} not exported")
+        print(
+            f"App Installers cannot be exported - App Installed {resource_id} not exported"
+        )
         return None
-    
+
     def _get_packages(self, resource_id: int) -> Optional[Dict]:
         """Get packages by ID"""
         try:
@@ -144,7 +141,7 @@ class JamfResourceDeleter:
         except HTTPError as e:
             print(f"Could not retrieve package {resource_id}: {e}")
             return None
-        
+
     def _get_policies(self, resource_id: int) -> Optional[Dict]:
         """Get policy by ID"""
         try:
@@ -152,15 +149,17 @@ class JamfResourceDeleter:
         except HTTPError as e:
             print(f"Could not retrieve policy {resource_id}: {e}")
             return None
-        
+
     def _get_profiles(self, resource_id: int) -> Optional[Dict]:
         """Get Profile config by ID"""
         try:
-            return self.jamfpy_client.classic.configuration_profiles.get_by_id(resource_id)
+            return self.jamfpy_client.classic.configuration_profiles.get_by_id(
+                resource_id
+            )
         except HTTPError as e:
             print(f"Could not retrieve profile {resource_id}: {e}")
             return None
-        
+
     def _get_scripts(self, resource_id: int) -> Optional[Dict]:
         """Get script by ID"""
         try:
@@ -168,15 +167,17 @@ class JamfResourceDeleter:
         except HTTPError as e:
             print(f"Could not retrieve script {resource_id}: {e}")
             return None
-        
+
     def _get_computer_extension_attributes(self, resource_id: int) -> Optional[Dict]:
         """Get Computer Extension Attribute by ID"""
         try:
-            return self.jamfpy_client.classic.computer_extension_attributes.get_by_id(resource_id)
+            return self.jamfpy_client.classic.computer_extension_attributes.get_by_id(
+                resource_id
+            )
         except HTTPError as e:
             print(f"Could not retrieve Extension Attribute {resource_id}: {e}")
             return None
-        
+
     def _get_restricted_software(self, resource_id: int) -> Optional[Dict]:
         """Get restricted software by ID"""
         try:
@@ -184,7 +185,6 @@ class JamfResourceDeleter:
         except HTTPError as e:
             print(f"Could not retrieve restricted software {resource_id}: {e}")
             return None
-
 
     def export_resource(self, resource_type: str, resource_id: int) -> Optional[Dict]:
         """_summary_
@@ -196,18 +196,18 @@ class JamfResourceDeleter:
         Returns:
             Optional[Dict]: _description_
         """
-        handler = self.resource_handlers.get(resource_type, {}).get('get')
+        handler = self.resource_handlers.get(resource_type, {}).get("get")
 
         if not handler:
             print(f"No export handler for resource type: {resource_type}")
             return None
-        
+
         try:
             return handler(resource_id)
         except Exception as e:
             print(f"Error exporting {resource_type} ID {resource_id}: {e}")
             return None
-        
+
     def save_backup(self, backup_data: Dict, timestamp: str) -> str:
         """_summary_
 
@@ -220,15 +220,15 @@ class JamfResourceDeleter:
         """
         backup_filename = f"backup_{timestamp}.json"
         backup_path = self.backup_dir / backup_filename
-        
-        with open(backup_path, 'w') as f:
+
+        with open(backup_path, "w") as f:
             json.dump(backup_data, f, indent=2)
 
         return str(backup_path)
 
-
-
-    def delete_resource(self, resource_type: str, resource_id: int, export: bool = False) -> tuple[bool, Optional[Dict]]:
+    def delete_resource(
+        self, resource_type: str, resource_id: int, export: bool = False
+    ) -> tuple[bool, Optional[Dict]]:
         """_summary_
 
         Args:
@@ -250,8 +250,7 @@ class JamfResourceDeleter:
             if backup_data:
                 print("Backed up configuration")
 
-
-        handler = self.resource_handlers.get(resource_type, {}).get('delete')
+        handler = self.resource_handlers.get(resource_type, {}).get("delete")
 
         if not handler:
             raise ValueError(f"Unknown resource type: {resource_type}")
@@ -263,7 +262,9 @@ class JamfResourceDeleter:
             print(f"Error deleting {resource_type} with ID: {resource_id}: {e}")
             return False, backup_data
 
-    def delete_from_json(self, json_file_path: Path, dry_run: bool = True, export: bool = False):
+    def delete_from_json(
+        self, json_file_path: Path, dry_run: bool = True, export: bool = False
+    ):
         """This method will take a file path of a JSON file and loop through each
         resouce and get the ID, then attempt to delete that resource
 
@@ -274,14 +275,13 @@ class JamfResourceDeleter:
 
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
-        
+
         with open(json_file_path, "r") as f:
             unused_resources = json.load(f)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         session_backups = {}
-
 
         for resource_type, resource_list in unused_resources.items():
             print(f"\nProcessing {resource_type}...")
@@ -298,7 +298,7 @@ class JamfResourceDeleter:
                         f" [DRY-RUN] Would delete {resource_type}: {resource_name} (ID: {resource_id})"
                     )
                     if export:
-                            print("[DRY-RUN] Would backup configuration first")
+                        print("[DRY-RUN] Would backup configuration first")
                 else:
                     print(
                         f"Deleting {resource_type}: {resource_name} (ID: {resource_id})"
@@ -306,18 +306,20 @@ class JamfResourceDeleter:
                     success, backup_data = self.delete_resource(
                         resource_type=resource_type,
                         resource_id=resource_id,
-                        export=export
+                        export=export,
                     )
 
                     if success:
                         print("Sucessfully deleted")
 
                         if export and backup_data:
-                            session_backups[resource_type].append({
-                                'id': resource_id,
-                                'name': resource_name,
-                                'configuration': backup_data
-                            })
+                            session_backups[resource_type].append(
+                                {
+                                    "id": resource_id,
+                                    "name": resource_name,
+                                    "configuration": backup_data,
+                                }
+                            )
                     else:
                         print("Failed to delete")
 
@@ -329,7 +331,7 @@ class JamfResourceDeleter:
         """List all backup files"""
         backup_files = sorted(self.backup_dir.glob("backup_*.json"), reverse=True)
         return [f.name for f in backup_files]
-    
+
     def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
         """TO_DO WORK IN PROGRESS"""
 
@@ -337,8 +339,8 @@ class JamfResourceDeleter:
 
         if not backup_path.exists():
             raise FileNotFoundError(f"Backup file not found: {backup_path}")
-        
-        with open(backup_path, 'r') as f:
+
+        with open(backup_path, "r") as f:
             backup_data = json.load(f)
 
         print(f"\n{'=' * 50}")
@@ -350,7 +352,7 @@ class JamfResourceDeleter:
 
             for resource in resources:
                 resource_name = resource.get("name", "Unkown")
-                resource_config = resource.get("configuration")
+                # resource_config = resource.get("configuration")
 
             if dry_run:
                 print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
