@@ -3,7 +3,7 @@ of resources from Jamf Pro and then loops through and deletes the resources.
 """
 
 from datetime import datetime
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, Optional, Any
 from pathlib import Path
 import json
 from jamfpy import Tenant
@@ -281,7 +281,7 @@ class JamfResourceDeleter:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        session_backups: dict[dict] = {}
+        session_backups: dict[str, list[dict[str, Any]]] = {}
 
         for resource_type, resource_list in unused_resources.items():
             print(f"\nProcessing {resource_type}...")
