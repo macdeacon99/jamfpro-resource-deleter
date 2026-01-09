@@ -114,7 +114,7 @@ class JamfResourceDeleter:
     def _get_computers(self, resource_id: int) -> Optional[Dict]:
         """Get computer configuration by ID"""
         try:
-            return self.jamfpy_client.classic.computers.get_by_id(resource_id)
+            return self.jamfpy_client.classic.computers.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve computer {resource_id}: {e}")
             return None
@@ -122,7 +122,7 @@ class JamfResourceDeleter:
     def _get_computer_groups(self, resource_id: int) -> Optional[Dict]:
         """Get computer group configuration by ID"""
         try:
-            return self.jamfpy_client.classic.computer_groups.get_by_id(resource_id)
+            return self.jamfpy_client.classic.computer_groups.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve computer group {resource_id}: {e}")
             return None
@@ -137,7 +137,7 @@ class JamfResourceDeleter:
     def _get_packages(self, resource_id: int) -> Optional[Dict]:
         """Get packages by ID"""
         try:
-            return self.jamfpy_client.classic.packages.get_by_id(resource_id)
+            return self.jamfpy_client.classic.packages.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve package {resource_id}: {e}")
             return None
@@ -145,7 +145,7 @@ class JamfResourceDeleter:
     def _get_policies(self, resource_id: int) -> Optional[Dict]:
         """Get policy by ID"""
         try:
-            return self.jamfpy_client.classic.policies.get_by_id(resource_id)
+            return self.jamfpy_client.classic.policies.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve policy {resource_id}: {e}")
             return None
@@ -155,7 +155,7 @@ class JamfResourceDeleter:
         try:
             return self.jamfpy_client.classic.configuration_profiles.get_by_id(
                 resource_id
-            )
+            ).json()
         except HTTPError as e:
             print(f"Could not retrieve profile {resource_id}: {e}")
             return None
@@ -163,7 +163,7 @@ class JamfResourceDeleter:
     def _get_scripts(self, resource_id: int) -> Optional[Dict]:
         """Get script by ID"""
         try:
-            return self.jamfpy_client.classic.scripts.get_by_id(resource_id)
+            return self.jamfpy_client.classic.scripts.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve script {resource_id}: {e}")
             return None
@@ -173,7 +173,7 @@ class JamfResourceDeleter:
         try:
             return self.jamfpy_client.classic.computer_extension_attributes.get_by_id(
                 resource_id
-            )
+            ).json()
         except HTTPError as e:
             print(f"Could not retrieve Extension Attribute {resource_id}: {e}")
             return None
@@ -181,7 +181,7 @@ class JamfResourceDeleter:
     def _get_restricted_software(self, resource_id: int) -> Optional[Dict]:
         """Get restricted software by ID"""
         try:
-            return self.jamfpy_client.classic.restricted_software.get_by_id(resource_id)
+            return self.jamfpy_client.classic.restricted_software.get_by_id(resource_id).json()
         except HTTPError as e:
             print(f"Could not retrieve restricted software {resource_id}: {e}")
             return None
@@ -203,7 +203,7 @@ class JamfResourceDeleter:
             return None
 
         try:
-            return handler(resource_id).json()
+            return handler(resource_id)
         except Exception as e:
             print(f"Error exporting {resource_type} ID {resource_id}: {e}")
             return None
