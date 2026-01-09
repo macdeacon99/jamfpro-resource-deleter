@@ -23,6 +23,7 @@ class JamfResourceDeleter:
         self.jamfpy_client: jamfpy.Tenant = jamfpy_client
 
         self.resource_handlers: Dict[str, Callable] = {
+            "unusedComputers": self._delete_computers,
             "unusedComputerGroups": self._delete_computer_group,
             "unusedMacApps": self._delete_apps,
             "unusedMobileDeviceApps": self._delete_apps,
@@ -34,10 +35,12 @@ class JamfResourceDeleter:
             "unusedRestrictedSoftware": self._delete_restricted_software,
         }
 
+    def _delete_computers(self, resource_id: int) -> bool:
+        """Export and delete computer by ID"""
+        return self.jamfpy_client.classic.computers.delete_by_id(resource_id)
+
     def _delete_computer_group(self, resource_id: int) -> bool:
         """Delete a computer group by ID"""
-        a = self.jamfpy_client.classic.computer_groups.get_by_id(resource_id)
-        print(a)
         return self.jamfpy_client.classic.computer_groups.delete_by_id(resource_id)
 
     def _delete_apps(self, resource_id: int) -> bool:
