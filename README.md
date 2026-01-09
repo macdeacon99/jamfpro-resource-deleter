@@ -1,8 +1,18 @@
-# Jamf Resource Deleter
+# Jamf Resource Deleter ( WIP )
 
 Safely delete unused or disabled resources from **Jamf Pro** using structured JSON input and the Jamf Pro API.
 
 This tool is designed to work alongside tools like **Prune**, allowing you to identify unused Jamf resources, export them as JSON, and then **programmatically remove them** from your Jamf Pro tenant.
+
+**THIS TOOL IS STILL A WORK IN PROGRESS AND SHOULD BE USED AT YOUR OWN RISK**
+
+---
+
+## Roadmap
+
+[] Develop Restore Functionality
+[] Tidy Up
+[] Split into multiple files for future growth
 
 ---
 
@@ -14,6 +24,7 @@ This tool **permanently deletes Jamf Pro resources**.
 - Always validate your JSON input
 - Always test against a **non-production Jamf tenant first**
 - Review the resources to be deleted before running
+- There is a
 
 You are responsible for the changes made by this tool.
 
@@ -38,6 +49,7 @@ The exact supported resources depend on JamfPy API coverage, but typically inclu
 - Scripts
 - Extension Attributes
 - Computer Groups
+- Computers
 - Mobile Device Groups
 - Configuration Profiles
 - Packages (optional / configurable)
@@ -52,21 +64,26 @@ The exact supported resources depend on JamfPy API coverage, but typically inclu
 2. Export those resources into one or more JSON files
 3. Provide the JSON files to `jamf-resource-deleter`
 4. The module (alongside JamfPy):
-    - Authenticates to Jamf Pro
-    - Iterates through each resource
-    - Deletes it via the Jamf Pro API
-
+   - Authenticates to Jamf Pro
+   - Iterates through each resource
+   - Deletes it via the Jamf Pro API
 
 ### Example
 
 ```py
 import os
-from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+from pathlib import Path
+from dotenv import load_dotenv
 import jamfpy
+from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
 
-client_id = "YOUR-CLIENT-ID"
-client_secrent = "YOUR-CLIENT-SECRET"
-jamfpro_url = "https://your-jamfpro-server.com"
+load_dotenv()
+
+client_id = os.environ.get("client_id")
+client_secrent = os.environ.get("client_secret")
+jamfpro_url = os.environ.get("jamf_url")
+
+JSON_DATA = Path("json_data/unused_profiles.json")
 
 jamfpy_client = jamfpy.Tenant(
     fqdn = jamfpro_url,
@@ -78,7 +95,8 @@ jamfpy_client = jamfpy.Tenant(
 
 deleter = JamfResourceDeleter(jamfpy_client)
 
-deleter.delete_from_json("PATH-TO-JSON-File")
+deleter.delete_from_json(JSON_DATA, dry_run=False, export=True)
+
 ```
 
 ---
@@ -86,6 +104,7 @@ deleter.delete_from_json("PATH-TO-JSON-File")
 ## Installation
 
 ### Requirements
+
 - Python **3.9+**
 - Jamf Pro account with API permissions
 - Jamf Pro API credentials
@@ -165,26 +184,229 @@ Each file must contain an array of objects with at minimum:
 
 ```json
 {
-    "unusedComputerProfiles": [{
-        "id": 12,
-        "name": "Restrictions"
-    }]
+  "unusedComputerProfiles": [
+    {"id": 12, "name": "Restrictions"},
+    {"id": 114, "name": "WiFi - Certificate"},
+  ]
+}
+
+{
+  "unusedPolicies": [
+    {"id": 133, "name": "Install App"},
+    {"id": 145, "name": "Remove App"},
+  ]
 }
 ```
 
 Each resource type has to match the following naming convention, this table is also the supported resources at time of writing:
 
-| JSON Key                     | Jamf Resource Type              | Delete Method                                 |
-|-----------------------------|----------------------------------|-----------------------------------------------|
-| `unusedComputerGroups`      | Computer Groups                  | `_delete_computer_group`                      |
-| `unusedMacApps`             | macOS Applications               | `_delete_apps`                                |
-| `unusedMobileDeviceApps`    | Mobile Device Applications       | `_delete_apps`                                |
-| `unusedPackages`            | Packages                         | `_delete_packages`                            |
-| `unusedPolicies`            | Policies                         | `_delete_policies`                            |
-| `unusedComputerProfiles`    | Computer Configuration Profiles  | `_delete_profiles`                            |
-| `unusedScripts`             | Scripts                          | `_delete_scripts`                             |
-| `unusedComputerEAs`         | Computer Extension Attributes    | `_delete_computer_extension_attributes`       |
-| `unusedRestrictedSoftware`  | Restricted Software              | `_delete_restricted_software`                 |
+| JSON Key                   | Jamf Resource Type              | Delete Method                           |
+| -------------------------- | ------------------------------- | --------------------------------------- |
+| `unusedComputerGroups`     | Computer Groups                 | `_delete_computer_group`                |
+| `unusedMacApps`            | macOS Applications              | `_delete_apps`                          |
+| `unusedMobileDeviceApps`   | Mobile Device Applications      | `_delete_apps`                          |
+| `unusedPackages`           | Packages                        | `_delete_packages`                      |
+| `unusedPolicies`           | Policies                        | `_delete_policies`                      |
+| `unusedComputerProfiles`   | Computer Configuration Profiles | `_delete_profiles`                      |
+| `unusedScripts`            | Scripts                         | `_delete_scripts`                       |
+| `unusedComputerEAs`        | Computer Extension Attributes   | `_delete_computer_extension_attributes` |
+| `unusedRestrictedSoftware` | Restricted Software             | `_delete_restricted_software`           |
 
 ---
+
+## Usage
+
+### Basic Usage
+
+```py
+pip install jamf-resource-deleter
+
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+import jamfpy
+from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+
+load_dotenv()
+
+client_id = os.environ.get("client_id")
+client_secrent = os.environ.get("client_secret")
+jamfpro_url = os.environ.get("jamf_url")
+
+JSON_DATA = Path("json_data/unused_profiles.json")
+
+jamfpy_client = jamfpy.Tenant(
+    fqdn = jamfpro_url,
+    auth_method="oauth2",
+    client_id=client_id,
+    client_secret=client_secrent,
+    token_exp_threshold_mins=1
+)
+
+deleter = JamfResourceDeleter(jamfpy_client)
+
+deleter.delete_from_json(JSON_DATA, dry_run=False, export=True)
+```
+
+---
+
+### Multiple Files
+
+The following example shows you how you can write a short method that will allow you to merge multiple JSON files into the one and then use these to delete resources.
+
+This also includes removing some keys (in this instance it is keys that are generated by Prune).
+
+```py
+pip install jamf-resource-deleter
+
+import os
+import json
+from pathlib import Path
+from dotenv import load_dotenv
+import jamfpy
+from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+
+load_dotenv()
+
+current_dir = Path(__file__).parent
+parent_dir = current_dir.parent
+
+client_id = os.environ.get("client_id")
+client_secrent = os.environ.get("client_secret")
+jamfpro_url = os.environ.get("jamf_url")
+
+JSON_DIR = current_dir / "json_data"
+
+keys_to_remove = ["jamfServer", "username"]
+
+def merge_json_files() -> dict:
+    combined_data = {}
+
+    for json_file in JSON_DIR.glob("*.json"):
+        with open(json_file, "r") as f:
+            data = json.load(f)
+            combined_data.update(data)
+
+    for key in keys_to_remove:
+        try:
+            del combined_data[key]
+        except KeyError as e:
+            print(f"There is no key for {e}, please check there are files in JSON directory!")
+
+    combined_path = JSON_DIR / "combined_data" / "combined.json"
+
+    with open(combined_path, "w") as f:
+        json.dump(combined_data, f, indent=2)
+
+    return combined_path
+
+if __name__ == "__main__":
+    jamfpy_client = jamfpy.Tenant(
+        fqdn = jamfpro_url,
+        auth_method="oauth2",
+        client_id=client_id,
+        client_secret=client_secrent,
+        token_exp_threshold_mins=1
+    )
+
+    deleter = JamfResourceDeleter(jamfpy_client)
+
+    combined_path = merge_json_files()
+
+    deleter.delete_from_json(combined_path, dry_run=False, export=True)
+```
+
+---
+
+### Dry Run
+
+You can run this module with a dry-run setting which will run through the JSON files, but not actually delete anything. This is enabled by default, and can be disabled by setting the attribute `dry_run` to `False` like the following:
+
+```py
+deleter = JamfResourceDeleter(jamfpy_client)
+
+deleter.delete_from_json(path_to_json, dry_run=False, export=False)
+```
+
+---
+
+### Exporting/Restoring
+
+Currently, the module will allow you to export all the configuration to another JSON file, so that things can be re-created manually if something that you deleted was not meant to be deleted.
+
+In the future, the plan is to create a _restore_ functionality so that if you were not meant to delete anything, you can restore everything from the backup file.
+
+To enable exporting, you can set the `export` attribute to `True`:
+
+```py
+deleter = JamfResourceDeleter(jamfpy_client)
+
+deleter.delete_from_json(path_to_json, dry_run=True, export=True)
+```
+
+---
+
+## Logging & Output
+
+The tool logs:
+
+- Resource type
+- Resource ID
+- Resource name
+- Success or failure of deletion
+
+Failures are reported clearly and do not halt the entire run unless critical.
+
+---
+
+## Recommended Workflow (Best Practice)
+
+1. Run Prune to identify unused resources
+2. Export results to JSON
+3. Review JSON manually
+4. Run jamf-resource-deleter with --dry-run
+5. Validate output
+6. Run again without --dry-run
+
+---
+
+## Development
+
+#### Run tests
+
+```bash
+pytest
+```
+
+#### Lint
+
+```bash
+ruff check .
+ruff format --check .
+```
+
+---
+
+## Contributing
+
+Contributions are welcome!
+
+Please:
+- Use **Conventional Commits**
+- Add tests for new behavior
+- Run linting before submitting PRs
+
+---
+
+## License
+
+Apache 2.0
+
+---
+
+## Disclaimer
+
+This project is **not affiliated with or endorsed by Jamf.**
+
+**Use at your own risk.**
 
