@@ -3,7 +3,7 @@ of resources from Jamf Pro and then loops through and deletes the resources.
 """
 
 from datetime import datetime
-from typing import Dict, Callable, Optional, Any
+from typing import Dict, Callable, Optional
 from pathlib import Path
 import json
 from jamfpy import Tenant
