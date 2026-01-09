@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.3.0...v0.4.0) (2026-01-09)
+
+
+### Features
+
+* add exporting ([#6](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/6)) ([3a82a86](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/3a82a869d4bf8ed6e326e8a73a6eb1efdc413880))
+
 ## [0.3.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.2.0...v0.3.0) (2026-01-08)
 
 
