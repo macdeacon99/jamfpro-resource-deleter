@@ -10,9 +10,9 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 
 ## Roadmap
 
-[] Develop Restore Functionality
-[] Tidy Up
-[] Split into multiple files for future growth
+[ ] Develop Restore Functionality
+[ ] Tidy Up
+[ ] Split into multiple files for future growth
 
 ---
 
@@ -392,6 +392,7 @@ ruff format --check .
 Contributions are welcome!
 
 Please:
+
 - Use **Conventional Commits**
 - Add tests for new behavior
 - Run linting before submitting PRs
@@ -409,4 +410,3 @@ Apache 2.0
 This project is **not affiliated with or endorsed by Jamf.**
 
 **Use at your own risk.**
-
