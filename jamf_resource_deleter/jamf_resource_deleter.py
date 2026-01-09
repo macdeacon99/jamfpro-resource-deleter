@@ -122,7 +122,9 @@ class JamfResourceDeleter:
     def _get_computer_groups(self, resource_id: int) -> Optional[Dict]:
         """Get computer group configuration by ID"""
         try:
-            return self.jamfpy_client.classic.computer_groups.get_by_id(resource_id).json()
+            return self.jamfpy_client.classic.computer_groups.get_by_id(
+                resource_id
+            ).json()
         except HTTPError as e:
             print(f"Could not retrieve computer group {resource_id}: {e}")
             return None
@@ -181,7 +183,9 @@ class JamfResourceDeleter:
     def _get_restricted_software(self, resource_id: int) -> Optional[Dict]:
         """Get restricted software by ID"""
         try:
-            return self.jamfpy_client.classic.restricted_software.get_by_id(resource_id).json()
+            return self.jamfpy_client.classic.restricted_software.get_by_id(
+                resource_id
+            ).json()
         except HTTPError as e:
             print(f"Could not retrieve restricted software {resource_id}: {e}")
             return None
