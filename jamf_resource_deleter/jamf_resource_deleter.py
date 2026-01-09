@@ -203,7 +203,7 @@ class JamfResourceDeleter:
             return None
 
         try:
-            return handler(resource_id)
+            return handler(resource_id).json()
         except Exception as e:
             print(f"Error exporting {resource_type} ID {resource_id}: {e}")
             return None
