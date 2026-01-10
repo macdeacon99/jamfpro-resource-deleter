@@ -174,7 +174,7 @@ class JamfResourceDeleter:
 
                 if dry_run:
                     logger.info(
-                        "[DRY-RUN] Would delete %s:" "%s (ID: %s)",
+                        "[DRY-RUN] Would delete %s:%s (ID: %s)",
                         resource_type,
                         resource_name,
                         resource_id,
