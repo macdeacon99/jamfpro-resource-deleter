@@ -11,8 +11,8 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 ## Roadmap
 
 - [ ] Develop Restore Functionality
-- [ ] Tidy Up
-- [ ] Split into multiple files for future growth
+- [ ] Tidy Up Documentation
+- [ x ] Split into multiple files for future growth
 
 ---
 
