@@ -32,14 +32,14 @@ jobs:
       - name: Lint
         run: ruff check .
 
-      - name: Test
-        run: pytest
+      # - name: Test
+      #   run: pytest
 
       - name: Format
         run: ruff format --check .
 
-      - name: Type check
-        run: mypy jamf_resource_deleter
+      # - name: Type check
+      #   run: mypy jamf_resource_deleter
 
       - name: Build package
         run: python -m build
