@@ -10,6 +10,7 @@ from handlers.package_handler import PackageHandler
 from handlers.restricted_software_handler import RestrictedSoftwareHandler
 from handlers.script_handler import ScriptHandler
 
+
 class ResourceRegistry:
     """Central Registry for resource type mappings"""
 

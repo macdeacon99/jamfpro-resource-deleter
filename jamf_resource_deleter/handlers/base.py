@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from jamfpy import Tenant
 
+
 class ResourceHandler(ABC):
     """Base Class for resource handling"""
 

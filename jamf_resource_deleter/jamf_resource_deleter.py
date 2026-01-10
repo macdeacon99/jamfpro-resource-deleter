@@ -15,17 +15,18 @@ from .models import DeletionResult, BatchResult, OperationStatus
 
 logger = logging.getLogger(__name__)
 
+
 class JamfResourceDeleter:
     """
     Class that will workout which resources need deleted and then delete them
     """
 
     def __init__(
-            self, 
-            jamfpy_client: Tenant, 
-            backup_dir: Optional[str] = None,
-            registry: Optional[ResourceRegistry] = None
-            ):
+        self,
+        jamfpy_client: Tenant,
+        backup_dir: Optional[str] = None,
+        registry: Optional[ResourceRegistry] = None,
+    ):
         """
 
         Args:
@@ -47,11 +48,11 @@ class JamfResourceDeleter:
         self.registry = registry or ResourceRegistry()
 
     def delete_resource(
-            self,
-            resource_type: str,
-            resource_id: int,
-            resource_name: str = "Unknown",
-            export: bool = False
+        self,
+        resource_type: str,
+        resource_id: int,
+        resource_name: str = "Unknown",
+        export: bool = False,
     ) -> DeletionResult:
         """Delete a single resource
 
@@ -74,7 +75,7 @@ class JamfResourceDeleter:
                 resource_id=resource_id,
                 resource_name=resource_name,
                 status=OperationStatus.FAILED,
-                error_message=f"Unkown resource type: {resource_type}"
+                error_message=f"Unkown resource type: {resource_type}",
             )
 
         handler = handler_class(self.client)
@@ -83,45 +84,62 @@ class JamfResourceDeleter:
         if export:
             backup_data = handler.get(resource_id)
             if backup_data:
-                logger.info("Backed up %s %s (ID: %s)", resource_type, resource_name, resource_id)
+                logger.info(
+                    "Backed up %s %s (ID: %s)",
+                    resource_type,
+                    resource_name,
+                    resource_id,
+                )
 
         try:
             success = handler.delete(resource_id)
 
             if success:
-                logger.info("Successfully deleted %s %s (ID: %s)", resource_type, resource_name, resource_id)
+                logger.info(
+                    "Successfully deleted %s %s (ID: %s)",
+                    resource_type,
+                    resource_name,
+                    resource_id,
+                )
                 return DeletionResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
                     status=OperationStatus.SUCCESS,
-                    backup_data=backup_data
+                    backup_data=backup_data,
                 )
             else:
-                logger.warning("Failed to delete %s %s (ID: %s)", resource_type, resource_name, resource_id)
+                logger.warning(
+                    "Failed to delete %s %s (ID: %s)",
+                    resource_type,
+                    resource_name,
+                    resource_id,
+                )
                 return DeletionResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
                     status=OperationStatus.FAILED,
-                    error_message="Deletion returned false"
+                    error_message="Deletion returned false",
                 )
         except Exception as e:
-            logger.error("Error deleting %s %s (ID: %s)", resource_type, resource_name, resource_id)
+            logger.error(
+                "Error deleting %s %s (ID: %s)",
+                resource_type,
+                resource_name,
+                resource_id,
+            )
             return DeletionResult(
-                    resource_type=resource_type,
-                    resource_id=resource_id,
-                    resource_name=resource_name,
-                    status=OperationStatus.FAILED,
-                    error_message=str(e),
-                    backup_data=backup_data
-                )
-        
+                resource_type=resource_type,
+                resource_id=resource_id,
+                resource_name=resource_name,
+                status=OperationStatus.FAILED,
+                error_message=str(e),
+                backup_data=backup_data,
+            )
+
     def delete_from_json(
-            self,
-            json_file_path: Path,
-            dry_run: bool = True,
-            export: bool = False
+        self, json_file_path: Path, dry_run: bool = True, export: bool = False
     ) -> BatchResult:
         """Delete resources from a JSON file
 
@@ -136,7 +154,7 @@ class JamfResourceDeleter:
 
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
-        
+
         with open(json_file_path, "r") as f:
             unused_resources = json.load(f)
 
@@ -156,33 +174,39 @@ class JamfResourceDeleter:
 
                 if dry_run:
                     logger.info(
-                        "[DRY-RUN] Would delete %s:"
-                        "%s (ID: %s)", resource_type, resource_name, resource_id
+                        "[DRY-RUN] Would delete %s:" "%s (ID: %s)",
+                        resource_type,
+                        resource_name,
+                        resource_id,
                     )
                     if export:
                         logger.info("[DRY-RUN] Would backup configuration first")
 
-                    results.append(DeletionResult(
-                        resource_type=resource_type,
-                        resource_id=resource_id,
-                        resource_name=resource_name,
-                        status=OperationStatus.SKIPPED
-                    ))
+                    results.append(
+                        DeletionResult(
+                            resource_type=resource_type,
+                            resource_id=resource_id,
+                            resource_name=resource_name,
+                            status=OperationStatus.SKIPPED,
+                        )
+                    )
                 else:
                     result = self.delete_resource(
                         resource_type=resource_type,
                         resource_id=resource_id,
                         resource_name=resource_name,
-                        export=export
+                        export=export,
                     )
                     results.append(result)
 
                     if export and result.backup_data:
-                        session_backups[resource_type].append({
-                            "id": resource_id,
-                            "name": resource_name,
-                            "configuration": result.backup_data
-                        })
+                        session_backups[resource_type].append(
+                            {
+                                "id": resource_id,
+                                "name": resource_name,
+                                "configuration": result.backup_data,
+                            }
+                        )
 
         backup_path = None
         if export and not dry_run and session_backups:
@@ -195,11 +219,10 @@ class JamfResourceDeleter:
             failed=sum(1 for r in results if r.status == OperationStatus.FAILED),
             skipped=sum(1 for r in results if r.status == OperationStatus.SKIPPED),
             results=results,
-            backup_path=backup_path
+            backup_path=backup_path,
         )
 
         return batch_result
-    
 
     def list_backups(self) -> list:
         """List all backup files"""

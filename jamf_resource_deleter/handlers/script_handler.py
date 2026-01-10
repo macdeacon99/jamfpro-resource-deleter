@@ -5,6 +5,7 @@ from requests import HTTPError
 
 logger = logging.getLogger(__name__)
 
+
 class ScriptHandler(ResourceHandler):
     resource_name = "Script"
 
@@ -15,5 +16,7 @@ class ScriptHandler(ResourceHandler):
         try:
             return self.client.classic.scripts.get_by_id(resource_id).json()
         except HTTPError as e:
-            logger.error("Could not retrieve %s %s: %s", self.resource_name, resource_id, e)
+            logger.error(
+                "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
+            )
             return None

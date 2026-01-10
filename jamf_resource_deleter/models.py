@@ -2,14 +2,17 @@ from dataclasses import dataclass
 from typing import Optional, Dict
 from enum import Enum
 
+
 class OperationStatus(Enum):
     SUCCESS = "success"
     FAILED = "failed"
     SKIPPED = "skipped"
 
+
 @dataclass
 class DeletionResult:
     """Result of a deletion operation"""
+
     resource_type: str
     resource_id: int
     resource_name: str
@@ -20,10 +23,12 @@ class DeletionResult:
     @property
     def success(self) -> bool:
         return self.status == OperationStatus.SUCCESS
-    
+
+
 @dataclass
 class BatchResult:
     """Result of a batch deletion operation"""
+
     total_processed: int
     successful: int
     failed: int

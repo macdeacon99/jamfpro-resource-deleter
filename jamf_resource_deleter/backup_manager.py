@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Dict, List
 import json
 
+
 class BackupManager:
     """Handles backup operations of Jamf Resources"""
 
@@ -23,13 +24,10 @@ class BackupManager:
             json.dump(backup_data, f, indent=2)
 
         return str(backup_path)
-    
+
     def list_backups(self) -> List[str]:
         """List all backup files in chronological order"""
-        backup_files = sorted(
-            self.backup_dir.glob("backup_*.json"),
-            reverse=True
-        )
+        backup_files = sorted(self.backup_dir.glob("backup_*.json"), reverse=True)
         return [f.name for f in backup_files]
 
     def load_backup(self, backup_filename: str) -> Dict:

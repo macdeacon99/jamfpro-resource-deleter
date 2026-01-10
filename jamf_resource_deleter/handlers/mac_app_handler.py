@@ -1,7 +1,8 @@
 from base import ResourceHandler
 
-# TODO - Need to test this and make sure that I can 
+# TODO - Need to test this and make sure that I can
 # delete all app types and that I can not export them.
+
 
 class MacAppsHandler(ResourceHandler):
     resource_name = "Mac App"

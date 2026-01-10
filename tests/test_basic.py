@@ -19,14 +19,12 @@ def deleter(mock_client, tmp_path):
 def test_delete_resource_success(deleter, mock_client):
     # Setup mock
     mock_client.classic.computers.delete_by_id.return_value = True
-    
+
     # Execute
     result = deleter.delete_resource(
-        "unusedComputers", 
-        resource_id=123,
-        resource_name="Test Computer"
+        "unusedComputers", resource_id=123, resource_name="Test Computer"
     )
-    
+
     # Assert
     assert result.status == OperationStatus.SUCCESS
     assert result.resource_id == 123
