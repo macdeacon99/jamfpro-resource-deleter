@@ -1,3 +1,6 @@
+def check():
+    assert(1 + 1 == 2)
+
 # import pytest
 # from unittest.mock import Mock
 
