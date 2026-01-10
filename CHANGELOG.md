@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.5](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.4...v0.4.5) (2026-01-10)
+
+
+### Bug Fixes
+
+* fix init.py ([#21](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/21)) ([4da98b1](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/4da98b1e39fc03ca1458a4b6adb74c75083d194a))
+* resolve export issue ([#16](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/16)) ([d7ea5ad](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/d7ea5adb57e396f3d20a05cdc24042304f97b644))
+
 ## [0.4.4](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.3...v0.4.4) (2026-01-09)
 
 
