@@ -26,6 +26,7 @@ class JamfResourceDeleter:
         jamfpy_client: Tenant,
         backup_dir: Optional[str] = None,
         registry: Optional[ResourceRegistry] = None,
+        configure_logging: bool = True
     ):
         """
 
@@ -34,6 +35,16 @@ class JamfResourceDeleter:
             backup_dir (Optional[str], optional): _description_. Defaults to None.
             registry (Optional[ResourceRegistry], optional): _description_. Defaults to None.
         """
+
+        if configure_logging:
+            root_logger = logging.getLogger()
+            if not root_logger.handlers:
+                logging.basicConfig(
+                    level=logging.INFO,
+                    format='%(levelname)s - %(message)s'
+                )
+        
+        self.logger = logging.getLogger(__name__)
 
         self.client = jamfpy_client
         self.backup_dir = backup_dir
