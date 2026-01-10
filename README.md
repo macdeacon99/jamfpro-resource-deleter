@@ -76,7 +76,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import jamfpy
-from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+from jamf_resource_deleter import JamfResourceDeleter
 
 load_dotenv()
 
@@ -226,7 +226,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import jamfpy
-from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+from jamf_resource_deleter import JamfResourceDeleter
 
 load_dotenv()
 
@@ -265,7 +265,7 @@ import json
 from pathlib import Path
 from dotenv import load_dotenv
 import jamfpy
-from jamf_resource_deleter.jamf_resource_deleter import JamfResourceDeleter
+from jamf_resource_deleter import JamfResourceDeleter
 
 load_dotenv()
 
