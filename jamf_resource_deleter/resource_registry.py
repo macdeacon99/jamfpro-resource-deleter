@@ -1,14 +1,16 @@
 from typing import Dict, Type
-from handlers.base import ResourceHandler
-from handlers.computer_handler import ComputerHandler
-from handlers.policy_handler import PolicyHandler
-from handlers.computer_attribute_handler import ComputerAttributeHandler
-from handlers.comupter_group_handler import ComputerGroupHandler
-from handlers.config_handler import ComputerConfigProfileHandler
-from handlers.mac_app_handler import MacAppsHandler
-from handlers.package_handler import PackageHandler
-from handlers.restricted_software_handler import RestrictedSoftwareHandler
-from handlers.script_handler import ScriptHandler
+from .handlers import (
+    ResourceHandler,
+    ComputerAttributeHandler,
+    ComputerConfigProfileHandler,
+    ComputerGroupHandler,
+    ComputerHandler,
+    ScriptHandler,
+    PackageHandler,
+    PolicyHandler,
+    RestrictedSoftwareHandler,
+    MacAppsHandler,
+)
 
 
 class ResourceRegistry:
