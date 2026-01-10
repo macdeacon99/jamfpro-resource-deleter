@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Dict
-from base import ResourceHandler
 from requests import HTTPError
+from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
 
