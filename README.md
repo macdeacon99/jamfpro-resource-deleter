@@ -15,7 +15,7 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
     - [ ] Add in new features like custom registry object
     - [ ] Add new logging information
     - [ ] Add new structure
-- [ x ] Split into multiple files for future growth
+- [x] Split into multiple files for future growth
 
 ---
 
