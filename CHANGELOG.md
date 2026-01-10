@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.5...v0.5.0) (2026-01-10)
+
+
+### Features
+
+* modularise classes ([#24](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/24)) ([485b025](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/485b0257aea18fd7844e0c74538157e9c225c4dd))
+
+
+### Bug Fixes
+
+* modularise classes ([#25](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/25)) ([de2dd17](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/de2dd17505e6307abc684e086758c7167fe259b0))
+* modularise classes ([#26](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/26)) ([7ed087e](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/7ed087e1de366f8baa7a1836aa0efce71d44d67e))
+* modularise classes ([#27](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/27)) ([611b770](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/611b7701511498230c284d64f5f3438946d40f47))
+
+
+### Documentation
+
+* update readme ([#22](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/22)) ([f78b311](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/f78b31173617e42b0e9357b489eb55d5fb704467))
+
 ## [0.4.5](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.4...v0.4.5) (2026-01-10)
 
 
