@@ -159,7 +159,7 @@ class JamfResourceDeleter:
             unused_resources = json.load(f)
 
         timestamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        session_backups = {}
+        session_backups: dict[str, dict] = {}
         results = []
 
         for resource_type, resource_list in unused_resources.items():
