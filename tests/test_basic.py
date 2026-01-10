@@ -1,6 +1,5 @@
 import pytest
-from unittest.mock import Mock, patch
-from pathlib import Path
+from unittest.mock import Mock
 
 from jamf_resource_deleter import JamfResourceDeleter
 from jamf_resource_deleter.models import OperationStatus
