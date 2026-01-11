@@ -24,7 +24,7 @@ class PolicyHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-        xml = self._policy_json_to_jamf_xml(resource_config)
+        xml = self._convert_to_xml(resource_config)
 
         try:
             success = self.client.classic.policies.create(xml)
@@ -102,31 +102,34 @@ class PolicyHandler(ResourceHandler):
             general["trigger"] = triggers
 
     def _policy_json_to_jamf_xml(self, policy_json: dict) -> str:
-            policy = policy_json["policy"]
+        policy = policy_json["policy"]
 
-            # --- GENERAL CLEANUP ---
-            general = policy["general"]
-            general.pop("id", None)
-            general.pop("retry_attempts", None)
-            general.pop("network_requirements", None)
+        general = policy["general"]
+        general.pop("id", None)
+        general.pop("retry_attempts", None)
+        general.pop("network_requirements", None)
 
-            # 🔴 THIS IS THE IMPORTANT LINE
-            self._normalize_triggers(general)
+        self._normalize_triggers(general)
 
-            # --- PACKAGE CONFIG ---
-            if "package_configuration" in policy:
-                policy["packages"] = policy["package_configuration"]["packages"]
-                del policy["package_configuration"]
+        if "package_configuration" in policy:
+            policy["packages"] = policy["package_configuration"]["packages"]
+            del policy["package_configuration"]
 
-            # --- REMOVE INVALID KEYS ---
-            policy.pop("printers", None)
+        policy.pop("printers", None)
 
-            # --- NORMALIZE FOR XML ---
-            normalized = self._normalize(policy)
+        normalized = self._normalize(policy)
 
-            xml = dicttoxml(
-                normalized,
-                custom_root="policy",
-                attr_type=False
-            )
-            return xml
+        xml = dicttoxml(
+            normalized,
+            custom_root="policy",
+            attr_type=False
+        )
+        
+        return xml
+
+    def _convert_to_xml(self, resource_config):
+        ee_data = resource_config["policy"]
+
+        return dicttoxml(
+            ee_data, custom_root="policy", attr_type=False
+        )
