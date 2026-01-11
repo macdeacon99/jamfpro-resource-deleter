@@ -2,7 +2,7 @@ import logging
 from typing import Optional, Dict
 import json
 from dicttoxml import dicttoxml
-from requests import HTTPError
+from requests import RequestException, Response
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
@@ -11,29 +11,29 @@ logger = logging.getLogger(__name__)
 class ComputerGroupHandler(ResourceHandler):
     resource_name = "Computer Group"
 
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         return self.client.classic.computer_groups.delete_by_id(resource_id)
 
     def get(self, resource_id: int) -> Optional[Dict]:
         try:
             return self.client.classic.computer_groups.get_by_id(resource_id).json()
-        except HTTPError as e:
+        except RequestException as e:
             logger.error(
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
 
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         xml = self._json_to_jamf_group_xml_dicttoxml(resource_config)
 
         try:
             success = self.client.classic.computer_groups.create(xml)
             return success.ok, success.status_code
-        except HTTPError as e:
+        except RequestException as e:
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _json_to_jamf_group_xml_dicttoxml(self, config_data):
+    def _json_to_jamf_group_xml_dicttoxml(self, config_data: Dict) -> str:
         """
         Convert configuration data to Jamf Pro API XML format using dicttoxml.
         Expects the 'configuration' object directly.
