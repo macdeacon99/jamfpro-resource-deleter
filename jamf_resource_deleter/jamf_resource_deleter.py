@@ -11,7 +11,7 @@ import logging
 from jamfpy import Tenant
 from .backup_manager import BackupManager
 from .resource_registry import ResourceRegistry
-from .models import DeletionResult, BatchResult, OperationStatus
+from .models import OperationResult, BatchResult, OperationStatus
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class JamfResourceDeleter:
         resource_id: int,
         resource_name: str = "Unknown",
         export: bool = False,
-    ) -> DeletionResult:
+    ) -> OperationResult:
         """Delete a single resource
 
         Args:
@@ -73,14 +73,14 @@ class JamfResourceDeleter:
             export (bool, optional): _description_. Defaults to False.
 
         Returns:
-            DeletionResult: _description_
+            OperationResult: _description_
         """
 
         handler_class = self.registry.get_handler_class(resource_type)
 
         if not handler_class:
             logger.error("Unknown resource type: %s", resource_type)
-            return DeletionResult(
+            return OperationResult(
                 resource_type=resource_type,
                 resource_id=resource_id,
                 resource_name=resource_name,
@@ -111,7 +111,7 @@ class JamfResourceDeleter:
                     resource_name,
                     resource_id,
                 )
-                return DeletionResult(
+                return OperationResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
@@ -125,7 +125,7 @@ class JamfResourceDeleter:
                     resource_name,
                     resource_id,
                 )
-                return DeletionResult(
+                return OperationResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
@@ -139,7 +139,7 @@ class JamfResourceDeleter:
                 resource_name,
                 resource_id,
             )
-            return DeletionResult(
+            return OperationResult(
                 resource_type=resource_type,
                 resource_id=resource_id,
                 resource_name=resource_name,
@@ -196,7 +196,7 @@ class JamfResourceDeleter:
                         logger.info("[DRY-RUN] Would backup configuration first")
 
                     results.append(
-                        DeletionResult(
+                        OperationResult(
                             resource_type=resource_type,
                             resource_id=resource_id,
                             resource_name=resource_name,
@@ -241,7 +241,9 @@ class JamfResourceDeleter:
         """List all backup files"""
         return self.backup_manager.list_backups()
 
-    def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
+    def restore_from_backup(
+        self, backup_filename: str, dry_run: bool = True
+    ) -> BatchResult:
         """This will restore resources from backup file"""
 
         backup_path = self.backup_path / backup_filename
@@ -255,6 +257,8 @@ class JamfResourceDeleter:
         print(f"\n{'=' * 50}")
         print(f"Restoring from backup: {backup_filename}")
         print(f"{'=' * 50}")
+
+        results = []
 
         for resource_type, resources in backup_data.items():
             handler_class = self.registry.get_handler_class(resource_type)
@@ -271,7 +275,6 @@ class JamfResourceDeleter:
                 resource_name = resource.get("name", "Unkown")
                 resource_config = resource.get("configuration")
 
-                # TODO - Create a CreationResult class
                 if dry_run:
                     logger.info(
                         "[DRY-RUN] Would restore %s: %s", resource_type, resource_name
@@ -288,12 +291,29 @@ class JamfResourceDeleter:
                                 resource_name,
                                 status_code,
                             )
+                            results.append(
+                                OperationResult(
+                                    resource_type=resource_type,
+                                    resource_name=resource_name,
+                                    resource_id=0,
+                                    status=OperationStatus.SUCCESS,
+                                )
+                            )
                         else:
                             logger.warning(
                                 "Failed to re-create %s %s: %s",
                                 resource_type,
                                 resource_name,
                                 status_code,
+                            )
+                            results.append(
+                                OperationResult(
+                                    resource_type=resource_type,
+                                    resource_name=resource_name,
+                                    resource_id=0,
+                                    status=OperationStatus.FAILED,
+                                    error_message=status_code,
+                                )
                             )
                     except Exception as e:
                         logger.error(
@@ -303,3 +323,16 @@ class JamfResourceDeleter:
                             e,
                         )
                 print({"=" * 50})
+
+            batch_result = BatchResult(
+                total_processed=len(results),
+                successful=sum(
+                    1 for r in results if r.status == OperationStatus.SUCCESS
+                ),
+                failed=sum(1 for r in results if r.status == OperationStatus.FAILED),
+                skipped=sum(1 for r in results if r.status == OperationStatus.SKIPPED),
+                results=results,
+                backup_path=backup_path,
+            )
+
+            return batch_result

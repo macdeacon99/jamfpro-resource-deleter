@@ -10,8 +10,8 @@ class OperationStatus(Enum):
 
 
 @dataclass
-class DeletionResult:
-    """Result of a deletion operation"""
+class OperationResult:
+    """Result of an operation"""
 
     resource_type: str
     resource_id: int
@@ -33,5 +33,5 @@ class BatchResult:
     successful: int
     failed: int
     skipped: int
-    results: list[DeletionResult]
+    results: list[OperationResult]
     backup_path: Optional[str] = None
