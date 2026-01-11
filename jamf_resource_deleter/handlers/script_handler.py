@@ -21,7 +21,7 @@ class ScriptHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
-        
+
     def create(self, resource_config: Dict) -> bool:
         xml = self._convert_to_xml(resource_config)
 
