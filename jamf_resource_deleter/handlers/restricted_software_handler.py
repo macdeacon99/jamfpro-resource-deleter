@@ -34,6 +34,6 @@ class RestrictedSoftwareHandler(ResourceHandler):
             return success.ok, success.status_code
         
     def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["policy"]
+        ee_data = resource_config["restricted_software"]
 
-        return dicttoxml(ee_data, custom_root="policy", attr_type=False)
+        return dicttoxml(ee_data, custom_root="restricted_software", attr_type=False)
