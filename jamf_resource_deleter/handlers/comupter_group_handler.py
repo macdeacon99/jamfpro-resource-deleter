@@ -27,6 +27,8 @@ class ComputerGroupHandler(ResourceHandler):
     def create(self, resource_config: Dict) -> bool:
         xml = self._convert_all_unused_groups(resource_config)
 
+        print(xml)
+
         try:
             success = self.client.classic.computer_groups.create(xml)
             print(success.text)
