@@ -4,6 +4,7 @@ from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
 
+
 class MacAppsHandler(ResourceHandler):
     resource_name = "Mac App"
 
