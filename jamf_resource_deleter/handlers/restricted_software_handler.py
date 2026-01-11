@@ -26,8 +26,7 @@ class RestrictedSoftwareHandler(ResourceHandler):
         xml = self._convert_to_xml(resource_config)
 
         try:
-            success = self.client.classic.policies.create(xml)
-            print(success.text)
+            success = self.client.classic.restricted_software.create(xml)
             return success.ok, success.status_code
         except HTTPError as e:
             logger.error("Error: %s", e)
