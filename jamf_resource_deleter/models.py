@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 from enum import Enum
 
 
@@ -18,7 +18,7 @@ class OperationResult:
     resource_name: str
     status: OperationStatus
     backup_data: Optional[Dict] = None
-    error_message: Optional[str] = None
+    error_message: Optional[Any] = None
 
     @property
     def success(self) -> bool:
@@ -34,4 +34,4 @@ class BatchResult:
     failed: int
     skipped: int
     results: list[OperationResult]
-    backup_path: Optional[str] = None
+    backup_path: Optional[Any] = None

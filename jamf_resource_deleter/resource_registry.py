@@ -1,4 +1,4 @@
-from typing import Dict, Type
+from typing import Dict, Type, Optional
 from .handlers import (
     ResourceHandler,
     ComputerAttributeHandler,
@@ -36,7 +36,7 @@ class ResourceRegistry:
         """Register a handler for a resource type"""
         self._handlers[resource_type] = handler_class
 
-    def get_handler_class(self, resource_type: str) -> Type[ResourceHandler]:
+    def get_handler_class(self, resource_type: str) -> Optional[type[ResourceHandler]]:
         """Get the handler class for a resource type"""
         return self._handlers.get(resource_type)
 

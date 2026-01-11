@@ -2,7 +2,7 @@ import logging
 import json
 from typing import Optional, Dict
 from dicttoxml import dicttoxml
-from requests import HTTPError
+from requests import RequestException, Response
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class ComputerConfigProfileHandler(ResourceHandler):
     resource_name = "macOS Configuration Profile"
 
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         return self.client.classic.configuration_profiles.delete_by_id(resource_id)
 
     def get(self, resource_id: int) -> Optional[Dict]:
@@ -19,23 +19,23 @@ class ComputerConfigProfileHandler(ResourceHandler):
             return self.client.classic.configuration_profiles.get_by_id(
                 resource_id
             ).json()
-        except HTTPError as e:
+        except RequestException as e:
             logger.error(
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
 
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         xml = self._json_to_jamf_profile_xml_dicttoxml(resource_config)
 
         try:
             success = self.client.classic.configuration_profiles.create(xml)
             return success.ok, success.status_code
-        except HTTPError as e:
+        except RequestException as e:
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _json_to_jamf_profile_xml_dicttoxml(self, config_data):
+    def _json_to_jamf_profile_xml_dicttoxml(self, config_data: Dict) -> str:
         """
         Convert configuration profile data to Jamf Pro API XML format using dicttoxml.
         Expects the 'configuration' object directly.
@@ -51,7 +51,7 @@ class ComputerConfigProfileHandler(ResourceHandler):
         profile_data = data.get("os_x_configuration_profile", {})
 
         # Prepare data for conversion
-        clean_data = {}
+        clean_data: Dict = {}
 
         # Handle general section
         if "general" in profile_data:

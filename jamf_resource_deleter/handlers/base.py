@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, Optional
+from requests import Response
 from jamfpy import Tenant
 
 
@@ -10,17 +11,17 @@ class ResourceHandler(ABC):
         self.client = client
 
     @abstractmethod
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         """Delete a resource by ID"""
         pass
 
     @abstractmethod
-    def get(self, resource_id: int) -> bool:
+    def get(self, resource_id: int) -> Optional[Dict]:
         """Get a resource by ID"""
         pass
 
     @abstractmethod
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         """Create a resource based on backup data"""
         pass
 
