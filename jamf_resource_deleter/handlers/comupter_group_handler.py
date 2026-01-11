@@ -34,7 +34,7 @@ class ComputerGroupHandler(ResourceHandler):
             return success.ok, success.status_code
 
     def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["comuter_group"]
+        ee_data = resource_config["computer_group"]
 
         return dicttoxml(
             ee_data, custom_root="computer_extension_attribute", attr_type=False
