@@ -29,7 +29,7 @@ class ComputerAttributeHandler(ResourceHandler):
     def create(self, resource_config: Dict) -> bool:
         # TODO - find a way of returning overall result
 
-        for resource in resource_config.get("unusedComputerEAs"):
+        for resource in resource_config.values():
 
             xml = self._convert_to_xml(resource)
 
