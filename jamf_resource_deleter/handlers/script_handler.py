@@ -1,7 +1,7 @@
 import logging
 from dicttoxml import dicttoxml
 from typing import Optional, Dict
-from requests import HTTPError
+from requests import RequestException, Response
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
@@ -10,13 +10,13 @@ logger = logging.getLogger(__name__)
 class ScriptHandler(ResourceHandler):
     resource_name = "Script"
 
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         return self.client.classic.scripts.delete_by_id(resource_id)
 
     def get(self, resource_id: int) -> Optional[Dict]:
         try:
             return self.client.classic.scripts.get_by_id(resource_id).json()
-        except HTTPError as e:
+        except RequestException as e:
             logger.error(
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
@@ -28,7 +28,7 @@ class ScriptHandler(ResourceHandler):
         try:
             success = self.client.classic.scripts.create(xml)
             return success.ok, success.status_code
-        except HTTPError as e:
+        except RequestException as e:
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 

@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Dict
 from dicttoxml import dicttoxml
-from requests import HTTPError
+from requests import RequestException, Response
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ dicttoxml_logger.setLevel(logging.ERROR)
 class ComputerAttributeHandler(ResourceHandler):
     resource_name = "Computer Extension Attribute"
 
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         # TODO - Add in error handling for resources that are already deleted
         return self.client.classic.computer_extension_attributes.delete_by_id(
             resource_id
@@ -23,7 +23,7 @@ class ComputerAttributeHandler(ResourceHandler):
             return self.client.classic.computer_extension_attributes.get_by_id(
                 resource_id
             ).json()
-        except HTTPError as e:
+        except RequestException as e:
             logger.error(
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
@@ -36,7 +36,7 @@ class ComputerAttributeHandler(ResourceHandler):
             success = self.client.classic.computer_extension_attributes.create(xml)
 
             return success.ok, success.status_code
-        except HTTPError as e:
+        except RequestException as e:
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
