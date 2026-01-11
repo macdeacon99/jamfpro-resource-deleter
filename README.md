@@ -11,6 +11,7 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 ## Roadmap
 
 - [x] Develop Restore Functionality
+- [ ] Add in feature to allow restore of only a certain type of resource (as a list)
 - [ ] Add in error handling correctly
 - [x] Test Package export
 - [x] Test MacApps functionality
