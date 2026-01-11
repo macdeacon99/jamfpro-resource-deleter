@@ -124,7 +124,7 @@ class JamfResourceDeleter:
                     resource_type,
                     resource_name,
                     resource_id,
-                    success.text
+                    success.text,
                 )
                 return OperationResult(
                     resource_type=resource_type,
