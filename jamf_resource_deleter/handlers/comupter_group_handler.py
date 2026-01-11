@@ -27,7 +27,7 @@ class ComputerGroupHandler(ResourceHandler):
 
         try:
             success = self.client.classic.computer_groups.create(xml)
-
+            print(success.text)
             return success.ok, success.status_code
         except HTTPError as e:
             logger.error("Error: %s", e)
