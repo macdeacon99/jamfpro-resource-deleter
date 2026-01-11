@@ -1,5 +1,4 @@
 import logging
-import json
 from typing import Optional, Dict
 from dicttoxml import dicttoxml
 from requests import HTTPError
@@ -38,14 +37,12 @@ class ComputerAttributeHandler(ResourceHandler):
                 xml
             )
 
-            print(success.text)
+            return success.ok
         except HTTPError as e:
             print(f"Error: {e}")
 
 
     def _convert_to_xml(self, resource_config):
-
-        print(resource_config)
 
         ee_data = resource_config['computer_extension_attribute']
 
