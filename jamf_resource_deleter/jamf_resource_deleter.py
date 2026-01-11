@@ -165,9 +165,6 @@ class JamfResourceDeleter:
             BatchResult: _description_
         """
 
-        # TODO - Add functionality to remove deleted resources from JSON file
-        # TODO - Add error handling in if resource is already deleted
-
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
 

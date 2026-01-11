@@ -12,6 +12,7 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 
 - [x] Develop Restore Functionality
 - [ ] Add in feature to allow restore of only a certain type of resource (as a list)
+- [ ] When resources are deleted from Jamf (successfully), also remove it from the JSON file so that if things fail, it can be re-ran
 - [ ] Add in error handling correctly
 - [x] Test Package export
 - [x] Test MacApps functionality
