@@ -1,6 +1,4 @@
 import logging
-import json
-from dicttoxml import dicttoxml
 from typing import Optional, Dict
 from requests import HTTPError
 from .base import ResourceHandler
