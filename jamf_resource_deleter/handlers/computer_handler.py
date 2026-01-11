@@ -20,3 +20,7 @@ class ComputerHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
+
+    def create(self, resource_config: Dict) -> bool:
+        logger.warning("Computers will not be re-created - please re-enrol the device")
+        return True, 200

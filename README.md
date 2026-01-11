@@ -11,6 +11,9 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 ## Roadmap
 
 - [ ] Develop Restore Functionality
+- [ ] Add in error handling correctly
+- [ ] Test Package export
+- [ ] Test MacApps functionality
 - [ ] Tidy Up Documentation
   - [ ] Add in new features like how to create custom registry object
   - [ ] Add new logging information
