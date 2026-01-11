@@ -120,10 +120,11 @@ class JamfResourceDeleter:
                 )
             else:
                 logger.warning(
-                    "Failed to delete %s %s (ID: %s)",
+                    "Failed to delete %s %s (ID: %s): %s",
                     resource_type,
                     resource_name,
                     resource_id,
+                    success.text,
                 )
                 return OperationResult(
                     resource_type=resource_type,

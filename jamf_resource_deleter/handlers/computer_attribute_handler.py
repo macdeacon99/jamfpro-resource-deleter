@@ -13,6 +13,7 @@ class ComputerAttributeHandler(ResourceHandler):
     resource_name = "Computer Extension Attribute"
 
     def delete(self, resource_id: int) -> bool:
+        # TODO - Add in error handling for resources that are already deleted
         return self.client.classic.computer_extension_attributes.delete_by_id(
             resource_id
         )
