@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.0.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.5.0...v1.0.0) (2026-01-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* add script restore ([#39](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/39))
+
+### Features
+
+* add extension attribute restore ([#31](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/31)) ([e4fea42](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/e4fea42ac0f7aa2445e1d76803062ceea7baa607))
+* add restore ([#32](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/32)) ([03246b9](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/03246b9c9c50facdb13fc37242f3826d62fa9210))
+* add restore ([#33](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/33)) ([cc9c152](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/cc9c1525003377b99515e8c5b56b47174125c8c2))
+* add restore computer ([#35](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/35)) ([1f486da](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/1f486daf47506e2fc57a8d4daa4df01543c0e188))
+* add restore config ([#34](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/34)) ([5a7fd8c](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/5a7fd8c738986059073f699dee5ccfe9f657ccdd))
+* add restore policy ([#36](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/36)) ([0eda3ee](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/0eda3eed35e5061d160b12737899aa1a213a6d06))
+* add script restore ([#39](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/39)) ([e2d33c2](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/e2d33c21a91eecb55bb4fd27979953ecd5ea48df))
+* restore rest software ([#37](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/37)) ([c2efc18](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/c2efc1853bbbc16cac07f6fd4419880a53dcfe70))
+
+
+### Documentation
+
+* update readme ([#29](https://github.com/macdeacon99/jamfpro-resource-deleter/issues/29)) ([2973de3](https://github.com/macdeacon99/jamfpro-resource-deleter/commit/2973de35144bbd5f26076712d07e180db40f0416))
+
 ## [0.5.0](https://github.com/macdeacon99/jamfpro-resource-deleter/compare/v0.4.5...v0.5.0) (2026-01-10)
 
 
