@@ -22,3 +22,16 @@ class ComputerConfigProfileHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
+
+    def create(self, resource_config: Dict) -> bool:
+        # xml = self._json_to_jamf_group_xml_dicttoxml(resource_config)
+
+        xml = ""
+
+        try:
+            success = self.client.classic.configuration_profiles.create(xml)
+            print(success.text)
+            return success.ok, success.status_code
+        except HTTPError as e:
+            logger.error("Error: %s", e)
+            return success.ok, success.status_code

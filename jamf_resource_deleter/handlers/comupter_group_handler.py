@@ -26,8 +26,6 @@ class ComputerGroupHandler(ResourceHandler):
     def create(self, resource_config: Dict) -> bool:
         xml = self._json_to_jamf_group_xml_dicttoxml(resource_config)
 
-        print(xml)
-
         try:
             success = self.client.classic.computer_groups.create(xml)
             print(success.text)
