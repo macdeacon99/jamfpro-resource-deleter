@@ -37,6 +37,4 @@ class PolicyHandler(ResourceHandler):
     def _convert_to_xml(self, resource_config):
         ee_data = resource_config["policy"]
 
-        return dicttoxml(
-            ee_data, custom_root="policy", attr_type=False
-        )
+        return dicttoxml(ee_data, custom_root="policy", attr_type=False)
