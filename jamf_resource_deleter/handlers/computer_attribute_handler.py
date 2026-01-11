@@ -29,20 +29,20 @@ class ComputerAttributeHandler(ResourceHandler):
     def create(self, resource_config: Dict) -> bool:
         # TODO - find a way of returning overall result
 
-        for resource in resource_config.values():
+        xml = self._convert_to_xml(resource_config)
 
-            xml = self._convert_to_xml(resource)
+        try:
+            success = self.client.classic.computer_extension_attributes.create(
+                xml
+            )
 
-            try:
-                success = self.client.classic.computer_extension_attributes.create(
-                    xml
-                )
-
-                print(success.ok)
-            except HTTPError as e:
-                print(f"Error: {e}")
+            print(success.ok)
+        except HTTPError as e:
+            print(f"Error: {e}")
 
 
     def _convert_to_xml(self, resource_config):
 
-        return dicttoxml(resource_config, custom_root='computer_extension_attribute', attr_type=False)
+        ee_data = resource_config["computer_extension_attribute"]
+
+        return dicttoxml(ee_data, custom_root='computer_extension_attribute', attr_type=False)
