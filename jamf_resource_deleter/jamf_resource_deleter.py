@@ -278,19 +278,21 @@ class JamfResourceDeleter:
                 else:
                     logger.info("Restoring %s: %s", resource_type, resource_name)
                     try:
-                        success = handler.create(resource_config)
+                        success, status_code = handler.create(resource_config)
 
                         if success:
                             logger.info(
-                                "Successfully re-created %s %s",
+                                "Successfully re-created %s %s: %s",
                                 resource_type,
-                                resource_name
+                                resource_name,
+                                status_code
                             )
                         else:
                             logger.warning(
-                                "Failed to re-create %s %s",
+                                "Failed to re-create %s %s: %s",
                                 resource_type,
                                 resource_name,
+                                status_code
                             )
                     except Exception as e:
                         logger.error(
