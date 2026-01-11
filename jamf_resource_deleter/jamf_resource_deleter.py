@@ -163,6 +163,8 @@ class JamfResourceDeleter:
             BatchResult: _description_
         """
 
+        # TODO - Add functionality to remove deleted resources from JSON file
+
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
 
@@ -185,7 +187,7 @@ class JamfResourceDeleter:
 
                 if dry_run:
                     logger.info(
-                        "[DRY-RUN] Would delete %s:%s (ID: %s)",
+                        "[DRY-RUN] Would delete %s: %s (ID: %s)",
                         resource_type,
                         resource_name,
                         resource_id,

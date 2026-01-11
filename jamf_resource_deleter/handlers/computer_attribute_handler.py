@@ -27,19 +27,20 @@ class ComputerAttributeHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-        # Set parameters
-        # Use API to re-create resource
+        # TODO - find a way of returning overall result
 
-        xml = self._convert_to_xml(resource_config)
+        for resource in resource_config.get("unusedComputerEAs"):
 
-        try:
-            success = self.client.classic.computer_extension_attributes.create(
-                xml
-            )
+            xml = self._convert_to_xml(resource)
 
-            return success.ok
-        except HTTPError as e:
-            print(f"Error: {e}")
+            try:
+                success = self.client.classic.computer_extension_attributes.create(
+                    xml
+                )
+
+                print(success.ok)
+            except HTTPError as e:
+                print(f"Error: {e}")
 
 
     def _convert_to_xml(self, resource_config):
