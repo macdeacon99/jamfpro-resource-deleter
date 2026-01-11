@@ -266,7 +266,7 @@ class JamfResourceDeleter:
 
             handler = handler_class(self.client)
 
-            print(f"\nRestoring {resource_type}...")
+            logger.info("\nRestoring %s...", resource_type)
 
             for resource in resources:
                 resource_name = resource.get("name", "Unkown")
@@ -274,9 +274,9 @@ class JamfResourceDeleter:
 
                 # TODO - Create a CreationResult class
                 if dry_run:
-                    print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
+                    logger.info("[DRY-RUN] Would restore %s: %s", resource_type, resource_name)
                 else:
-                    print(f"Restoring {resource_type}: {resource_name}...")
+                    logger.info("Restoring %s: %s", resource_type, resource_name)
                     try:
                         success = handler.create(resource_config)
 
