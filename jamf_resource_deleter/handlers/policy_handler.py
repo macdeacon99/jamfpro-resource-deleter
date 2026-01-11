@@ -99,6 +99,6 @@ class PolicyHandler(ResourceHandler):
             custom_root="policy",
             attr_type=False
         )
-
+        print(xml)
         dom = parseString(xml)
         return dom.toprettyxml(indent="  ")
