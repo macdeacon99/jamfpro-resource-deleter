@@ -22,3 +22,6 @@ class PackageHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
+
+    def create(self, resource_config: Dict):
+        pass

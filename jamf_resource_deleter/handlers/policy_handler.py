@@ -27,7 +27,6 @@ class PolicyHandler(ResourceHandler):
 
         try:
             success = self.client.classic.policies.create(xml)
-            print(success.text)
             return success.ok, success.status_code
         except HTTPError as e:
             logger.error("Error: %s", e)

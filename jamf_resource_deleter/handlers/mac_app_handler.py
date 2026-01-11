@@ -1,3 +1,4 @@
+from typing import Dict
 from .base import ResourceHandler
 
 # TODO - Need to test this and make sure that I can
@@ -9,3 +10,9 @@ class MacAppsHandler(ResourceHandler):
 
     def delete(self, resource_id: int) -> bool:
         return self.client.pro.app_installers.delete(resource_id)
+
+    def get(self, resource_id: int):
+        pass
+
+    def create(self, resource_config: Dict):
+        pass
