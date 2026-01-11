@@ -31,7 +31,7 @@ class RestrictedSoftwareHandler(ResourceHandler):
         except HTTPError as e:
             logger.error("Error: %s", e)
             return success.ok, success.status_code
-        
+
     def _convert_to_xml(self, resource_config):
         ee_data = resource_config["restricted_software"]
 

@@ -10,7 +10,7 @@ class MacAppsHandler(ResourceHandler):
 
     def delete(self, resource_id: int) -> bool:
         return self.client.pro.app_installers.delete(resource_id)
-    
+
     def get(self, resource_id: int):
         pass
 
