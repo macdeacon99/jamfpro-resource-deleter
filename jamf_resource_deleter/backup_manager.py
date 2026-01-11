@@ -11,7 +11,7 @@ class BackupManager:
         self.backup_dir = backup_dir
         self.backup_dir.mkdir(parents=True, exist_ok=True)
 
-    def save_backup(self, backup_data: Dict, timestamp: str = None) -> str:
+    def save_backup(self, backup_data: Dict, timestamp: str | None = None) -> str:
         """Save backup data to a JSON file"""
 
         if timestamp is None:
