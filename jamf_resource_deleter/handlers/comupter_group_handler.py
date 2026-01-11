@@ -37,22 +37,22 @@ class ComputerGroupHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _json_to_jamf_group_xml_dicttoxml(self, json_data):
+    def json_to_jamf_group_xml_dicttoxml(config_data):
         """
-        Convert JSON computer group data to Jamf Pro API XML format using dicttoxml.
+        Convert configuration data to Jamf Pro API XML format using dicttoxml.
+        Expects the 'configuration' object directly.
         """
         
         # Parse JSON if it's a string
-        if isinstance(json_data, str):
-            data = json.loads(json_data)
+        if isinstance(config_data, str):
+            data = json.loads(config_data)
         else:
-            data = json_data
+            data = config_data
         
         # Extract the computer_group data
-        group_data = data.get('configuration', {}).get('computer_group', {})
+        group_data = data.get('computer_group', {})
         
         # Prepare data for conversion
-        # Remove fields that shouldn't be in the XML for creation (like id)
         clean_data = {}
         
         if 'name' in group_data:
@@ -112,29 +112,5 @@ class ComputerGroupHandler(ResourceHandler):
         xml_string = xml_string.replace('<is_smart>True</is_smart>', '<is_smart>true</is_smart>')
         xml_string = xml_string.replace('<is_smart>False</is_smart>', '<is_smart>false</is_smart>')
         
+        # Pretty print
         return xml_string
-
-
-    def _convert_all_unused_groups(self, json_data):
-        """
-        Process the entire unusedComputerGroups structure.
-        """
-        
-        # Load data
-        if isinstance(json_data, str):
-            try:
-                with open(json_data, 'r') as f:
-                    data = json.load(f)
-            except FileNotFoundError:
-                data = json.loads(json_data)
-        else:
-            data = json_data
-        
-        results = {}
-        
-        for group in data.get('unusedComputerGroups', []):
-            group_name = group.get('name', f"group_{group.get('id')}")
-            xml_output = self._json_to_jamf_group_xml_dicttoxml(group)
-            results[group_name] = xml_output
-        
-        return results
