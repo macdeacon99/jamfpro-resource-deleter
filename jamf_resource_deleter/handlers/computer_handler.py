@@ -34,8 +34,8 @@ class ComputerHandler(ResourceHandler):
             return success.ok, success.status_code
 
     def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["computer_extension_attribute"]
+        ee_data = resource_config["computer"]
 
         return dicttoxml(
-            ee_data, custom_root="computer_extension_attribute", attr_type=False
+            ee_data, custom_root="computer", attr_type=False
         )
