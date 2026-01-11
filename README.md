@@ -334,7 +334,7 @@ Contributions are welcome! Please feel free to submit issues, fork the repositor
 
 ## License
 
-[Apache2.0](.LICENSE)
+[Apache2.0](LICENSE)
 
 ## Acknowledgments
 
