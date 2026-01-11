@@ -23,7 +23,7 @@ class PolicyHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-        xml = self._convert_to_xml(resource_config)
+        xml = self._policy_json_to_jamf_xml(resource_config)
 
         try:
             success = self.client.classic.computer_extension_attributes.create(xml)
@@ -105,10 +105,3 @@ class PolicyHandler(ResourceHandler):
         )
 
         return xml_bytes
-    
-    def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["policy"]
-
-        return dicttoxml(
-            ee_data, custom_root="policy", attr_type=False
-        )
