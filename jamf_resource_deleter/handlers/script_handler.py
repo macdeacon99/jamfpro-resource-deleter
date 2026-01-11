@@ -6,7 +6,6 @@ from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
 
-
 class ScriptHandler(ResourceHandler):
     resource_name = "Script"
 
