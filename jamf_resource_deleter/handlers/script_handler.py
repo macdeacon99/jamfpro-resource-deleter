@@ -1,4 +1,5 @@
 import logging
+from dicttoxml import dicttoxml
 from typing import Optional, Dict
 from requests import HTTPError
 from .base import ResourceHandler
@@ -20,3 +21,18 @@ class ScriptHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
+        
+    def create(self, resource_config: Dict) -> bool:
+        xml = self._convert_to_xml(resource_config)
+
+        try:
+            success = self.client.classic.scripts.create(xml)
+            return success.ok, success.status_code
+        except HTTPError as e:
+            logger.error("Error: %s", e)
+            return success.ok, success.status_code
+
+    def _convert_to_xml(self, resource_config):
+        ee_data = resource_config["script"]
+
+        return dicttoxml(ee_data, custom_root="script", attr_type=False)
