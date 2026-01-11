@@ -21,6 +21,6 @@ class ComputerHandler(ResourceHandler):
             )
             return None
 
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         logger.warning("Computers will not be re-created - please re-enrol the device")
         return True, 200

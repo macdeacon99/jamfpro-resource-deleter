@@ -21,6 +21,6 @@ class PackageHandler(ResourceHandler):
             )
             return None
 
-    # JamfPy SDK only returns metadata so can't re-create packages - Success based on this
-    def create(self, resource_config: Dict) -> bool:
-        return True
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
+        logger.warning("Cannot retrieve or re-create mac apps, so will not continue")
+        return True, 200

@@ -1,6 +1,8 @@
-from typing import Dict
+from typing import Dict, Optional
+import logging
 from .base import ResourceHandler
 
+logger = logging.getLogger(__name__)
 
 class MacAppsHandler(ResourceHandler):
     resource_name = "Mac App"
@@ -8,9 +10,10 @@ class MacAppsHandler(ResourceHandler):
     def delete(self, resource_id: int) -> bool:
         return self.client.pro.app_installers.delete(resource_id)
 
-    # Cannot retrieve or re-create macapps so not being implemented
-    def get(self, resource_id: int):
-        pass
+    def get(self, resource_id: int) -> Optional[Dict]:
+        logger.warning("Cannot retrieve or re-create mac apps, so will not continue")
+        return None
 
-    def create(self, resource_config: Dict):
-        pass
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
+        logger.warning("Cannot retrieve or re-create mac apps, so will not continue")
+        return True, 200

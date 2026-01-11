@@ -25,7 +25,7 @@ class ComputerConfigProfileHandler(ResourceHandler):
             )
             return None
 
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         xml = self._json_to_jamf_profile_xml_dicttoxml(resource_config)
 
         try:
@@ -35,7 +35,7 @@ class ComputerConfigProfileHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _json_to_jamf_profile_xml_dicttoxml(self, config_data):
+    def _json_to_jamf_profile_xml_dicttoxml(self, config_data: Dict) -> str:
         """
         Convert configuration profile data to Jamf Pro API XML format using dicttoxml.
         Expects the 'configuration' object directly.

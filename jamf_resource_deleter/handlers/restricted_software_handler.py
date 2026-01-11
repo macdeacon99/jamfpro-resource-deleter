@@ -22,7 +22,7 @@ class RestrictedSoftwareHandler(ResourceHandler):
             )
             return None
 
-    def create(self, resource_config: Dict) -> bool:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         xml = self._convert_to_xml(resource_config)
 
         try:
@@ -32,7 +32,7 @@ class RestrictedSoftwareHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _convert_to_xml(self, resource_config):
+    def _convert_to_xml(self, resource_config: Dict) -> str:
         ee_data = resource_config["restricted_software"]
 
         return dicttoxml(ee_data, custom_root="restricted_software", attr_type=False)

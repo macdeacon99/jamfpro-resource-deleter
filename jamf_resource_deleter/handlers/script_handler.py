@@ -32,7 +32,7 @@ class ScriptHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _convert_to_xml(self, resource_config):
+    def _convert_to_xml(self, resource_config: Dict) -> str:
         ee_data = resource_config["script"]
 
         return dicttoxml(ee_data, custom_root="script", attr_type=False)
