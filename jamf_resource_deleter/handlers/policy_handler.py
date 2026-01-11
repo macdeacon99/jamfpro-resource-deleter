@@ -1,5 +1,4 @@
 import logging
-from xml.dom.minidom import parseString
 from dicttoxml import dicttoxml
 from typing import Optional, Dict
 from requests import HTTPError
