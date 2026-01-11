@@ -32,8 +32,10 @@ class ComputerAttributeHandler(ResourceHandler):
         # Use API to re-create resource
 
         try:
-            return self.client.classic.computer_extension_attributes.create(
+            success = self.client.classic.computer_extension_attributes.create(
                 resource_config
             )
+
+            print(success.text)
         except HTTPError as e:
             print(f"Error: {e}")
