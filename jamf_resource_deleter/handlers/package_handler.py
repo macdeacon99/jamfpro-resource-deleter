@@ -16,7 +16,7 @@ class PackageHandler(ResourceHandler):
 
     def get(self, resource_id: int) -> Optional[Dict]:
         try:
-            return self.client.classic.packages.get_by_id(resource_id)
+            return self.client.classic.packages.get_by_id(resource_id).json()
         except HTTPError as e:
             logger.error(
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
