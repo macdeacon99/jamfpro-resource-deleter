@@ -2,6 +2,7 @@
 of resources from Jamf Pro and then loops through and deletes the resources.
 """
 
+import os
 from typing import Optional
 from pathlib import Path
 from datetime import datetime
@@ -51,7 +52,7 @@ class JamfResourceDeleter:
         if backup_dir:
             self.backup_path = Path(backup_dir)
         else:
-            self.backup_path = Path(__file__).parent / "backups"
+            self.backup_path = Path.cwd() / "backups"
 
         self.backup_manager = BackupManager(self.backup_path)
 
