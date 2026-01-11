@@ -272,34 +272,36 @@ class JamfResourceDeleter:
                 resource_name = resource.get("name", "Unkown")
                 resource_config = resource.get("configuration")
 
+                print(resource_config, resource_name)
+
 
             # TODO - Create a CreationResult class
-            if dry_run:
-                print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
-            else:
-                print(f"Restoring {resource_type}: {resource_name}...")
-                try:
-                    success = handler.create(resource_config)
+            # if dry_run:
+            #     print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
+            # else:
+            #     print(f"Restoring {resource_type}: {resource_name}...")
+            #     try:
+            #         success = handler.create(resource_config)
 
-                    if success:
-                        logger.info(
-                            "Successfully re-created %s %s",
-                            resource_type,
-                            resource_name
-                        )
-                        return True
-                    else:
-                        logger.warning(
-                            "Failed to re-create %s %s",
-                            resource_type,
-                            resource_name,
-                        )
-                        return False
-                except Exception as e:
-                    logger.error(
-                        "Error re-creating %s %s: %s",
-                        resource_type,
-                        resource_name,
-                        e
-                    )
-                    return False
+            #         if success:
+            #             logger.info(
+            #                 "Successfully re-created %s %s",
+            #                 resource_type,
+            #                 resource_name
+            #             )
+            #             return True
+            #         else:
+            #             logger.warning(
+            #                 "Failed to re-create %s %s",
+            #                 resource_type,
+            #                 resource_name,
+            #             )
+            #             return False
+            #     except Exception as e:
+            #         logger.error(
+            #             "Error re-creating %s %s: %s",
+            #             resource_type,
+            #             resource_name,
+            #             e
+            #         )
+            #         return False
