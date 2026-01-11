@@ -25,7 +25,7 @@ class ComputerGroupHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-        xml = self._convert_all_unused_groups(resource_config)
+        xml = self._json_to_jamf_group_xml_dicttoxml(resource_config)
 
         print(xml)
 
@@ -37,7 +37,7 @@ class ComputerGroupHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def json_to_jamf_group_xml_dicttoxml(config_data):
+    def _json_to_jamf_group_xml_dicttoxml(self, config_data):
         """
         Convert configuration data to Jamf Pro API XML format using dicttoxml.
         Expects the 'configuration' object directly.
