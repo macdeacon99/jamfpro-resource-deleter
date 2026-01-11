@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Dict
 from jamfpy import Tenant
 
 
@@ -16,6 +17,11 @@ class ResourceHandler(ABC):
     @abstractmethod
     def get(self, resource_id: int) -> bool:
         """Get a resource by ID"""
+        pass
+
+    @abstractmethod
+    def create(self, resource_config: Dict) -> bool:
+        """Create a resource based on backup data"""
         pass
 
     @property

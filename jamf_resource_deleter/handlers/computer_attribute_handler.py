@@ -1,4 +1,6 @@
 import logging
+import json
+from pathlib import Path
 from typing import Optional, Dict
 from requests import HTTPError
 from .base import ResourceHandler
@@ -24,3 +26,14 @@ class ComputerAttributeHandler(ResourceHandler):
                 "Could not retrieve %s %s: %s", self.resource_name, resource_id, e
             )
             return None
+
+    def create(self, resource_config: Dict) -> bool:
+        # Set parameters
+        # Use API to re-create resource
+
+        try:
+            return self.client.classic.computer_extension_attributes.create(
+                resource_config
+            )
+        except HTTPError as e:
+            print(f"Error: {e}")

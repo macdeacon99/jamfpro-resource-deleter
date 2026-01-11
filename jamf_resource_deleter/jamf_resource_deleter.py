@@ -240,7 +240,7 @@ class JamfResourceDeleter:
         return self.backup_manager.list_backups()
 
     def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
-        """TO_DO WORK IN PROGRESS"""
+        """TODO WORK IN PROGRESS"""
 
         backup_path = self.backup_dir / backup_filename
 
@@ -255,16 +255,48 @@ class JamfResourceDeleter:
         print(f"{'=' * 50}")
 
         for resource_type, resources in backup_data.items():
+            handler_class = self.registry.get_handler_class(resource_type)
+
+            if not handler_class:
+                logger.error("Unknown resource type: %s", resource_type)
+                return False
+
+            handler = handler_class(self.client)
+
             print(f"\nRestoring {resource_type}...")
 
             for resource in resources:
                 resource_name = resource.get("name", "Unkown")
-                # resource_config = resource.get("configuration")
+                resource_config = resource.get("configuration")
 
+
+            # TODO - Create a CreationResult class
             if dry_run:
                 print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
             else:
                 print(f"Restoring {resource_type}: {resource_name}...")
-                # TODO Add in logic here for restoring from file to Jamf Pro
-                # Needs more thinking
-                print("Restoration not implemented yet")
+                try:
+                    success = handler.create(resource_config)
+
+                    if success:
+                        logger.info(
+                            "Successfully re-created %s %s",
+                            resource_type,
+                            resource_name
+                        )
+                        return True
+                    else:
+                        logger.warning(
+                            "Failed to re-create %s %s",
+                            resource_type,
+                            resource_name,
+                        )
+                        return False
+                except Exception as e:
+                    logger.error(
+                        "Error re-creating %s %s: %s",
+                        resource_type,
+                        resource_name,
+                        e
+                    )
+                    return False
