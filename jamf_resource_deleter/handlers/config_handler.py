@@ -30,7 +30,6 @@ class ComputerConfigProfileHandler(ResourceHandler):
 
         try:
             success = self.client.classic.configuration_profiles.create(xml)
-            print(success.text)
             return success.ok, success.status_code
         except HTTPError as e:
             logger.error("Error: %s", e)
