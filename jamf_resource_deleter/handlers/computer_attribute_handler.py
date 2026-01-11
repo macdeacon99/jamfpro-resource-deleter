@@ -29,7 +29,6 @@ class ComputerAttributeHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-
         xml = self._convert_to_xml(resource_config)
 
         try:
