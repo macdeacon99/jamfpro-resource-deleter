@@ -5,6 +5,7 @@ from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
 
+
 class PackageHandler(ResourceHandler):
     resource_name = "Package"
 

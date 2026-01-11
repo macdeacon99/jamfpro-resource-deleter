@@ -1,6 +1,7 @@
 from typing import Dict
 from .base import ResourceHandler
 
+
 class MacAppsHandler(ResourceHandler):
     resource_name = "Mac App"
 
