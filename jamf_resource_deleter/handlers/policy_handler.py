@@ -1,4 +1,5 @@
 import logging
+from xml.dom.minidom import parseString
 from dicttoxml import dicttoxml
 from typing import Optional, Dict
 from requests import HTTPError
@@ -33,75 +34,71 @@ class PolicyHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    JAMF_ALLOWED_TOP_LEVEL_KEYS = {
-        "general",
-        "scope",
-        "self_service",
-        "packages",
-        "scripts",
-        "printers",
-        "dock_items",
-        "account_maintenance",
-        "reboot",
-        "maintenance",
-        "files_processes",
-        "user_interaction",
-        "disk_encryption"
+    
+    LIST_NODE_MAP = {
+        "scripts": "script",
+        "packages": "package",
+        "computers": "computer",
+        "computer_groups": "computer_group",
+        "buildings": "building",
+        "departments": "department",
+        "users": "user",
+        "user_groups": "user_group",
+        "network_segments": "network_segment",
+        "ibeacons": "ibeacon",
+        "dock_items": "dock_item",
     }
 
 
-    def _normalize_for_jamf(self, value):
-        """
-        Recursively normalize JSON so Jamf accepts the XML:
-        - Booleans -> 'true' / 'false'
-        - Empty lists -> empty dict (Jamf hates <item/>)
-        - Remove None values
-        """
+    def _jamf_bool(self, value):
+        return "true" if value is True else "false" if value is False else value
+
+
+    def _normalize(self, value, parent_key=None):
         if isinstance(value, bool):
-            return "true" if value else "false"
+            return self._jamf_bool(value)
 
         if isinstance(value, dict):
-            return {
-                k: self._normalize_for_jamf(v)
-                for k, v in value.items()
-                if v is not None
-            }
+            out = {}
+            for k, v in value.items():
+                if v in ({}, [], None, ""):
+                    continue
+                out[k] = self._normalize(v, k)
+            return out
 
         if isinstance(value, list):
             if not value:
-                return {}  # Jamf expects empty parent nodes
-            return [self._normalize_for_jamf(v) for v in value]
+                return None
+
+            node_name = self.LIST_NODE_MAP.get(parent_key, "item")
+            return {node_name: [self._normalize(v) for v in value if v not in ("", None)]}
 
         return value
 
 
     def _policy_json_to_jamf_xml(self, policy_json: dict) -> str:
-        """
-        Convert Jamf policy JSON to Jamf Classic API XML
-        """
+        policy = policy_json["configuration"]["policy"]
 
-        policy = policy_json["policy"]
+        # --- GENERAL CLEANUP ---
+        policy["general"].pop("id", None)
+        policy["general"].pop("retry_attempts", None)
+        policy["general"].pop("network_requirements", None)
 
-        # Remove UI / read-only fields Jamf rejects
-        policy.get("general", {}).pop("id", None)
-
-        # Convert package_configuration → packages
+        # --- PACKAGE CONFIG ---
         if "package_configuration" in policy:
-            policy["packages"] = policy["package_configuration"].get("packages", [])
-            policy.pop("package_configuration")
+            policy["packages"] = policy["package_configuration"]["packages"]
+            del policy["package_configuration"]
 
-        # Remove unsupported top-level keys
-        policy = {
-            k: v for k, v in policy.items()
-            if k in self.JAMF_ALLOWED_TOP_LEVEL_KEYS
-        }
+        # --- REMOVE INVALID KEYS ---
+        policy.pop("printers", None)
 
-        normalized_policy = self._normalize_for_jamf(policy)
+        normalized = self._normalize(policy)
 
-        xml_bytes = dicttoxml(
-            normalized_policy,
+        xml = dicttoxml(
+            normalized,
             custom_root="policy",
             attr_type=False
         )
 
-        return xml_bytes
+        dom = parseString(xml)
+        return dom.toprettyxml(indent="  ")
