@@ -47,6 +47,6 @@ class ComputerAttributeHandler(ResourceHandler):
 
         print(resource_config)
 
-        ee_data = resource_config['configuration']['computer_extension_attribute']
+        ee_data = resource_config['computer_extension_attribute']
 
         return dicttoxml(ee_data, custom_root='computer_extension_attribute', attr_type=False)
