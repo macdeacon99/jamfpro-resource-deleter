@@ -77,7 +77,7 @@ class PolicyHandler(ResourceHandler):
 
 
     def _policy_json_to_jamf_xml(self, policy_json: dict) -> str:
-        policy = policy_json["configuration"]["policy"]
+        policy = policy_json["policy"]
 
         # --- GENERAL CLEANUP ---
         policy["general"].pop("id", None)
