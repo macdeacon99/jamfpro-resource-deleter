@@ -25,7 +25,6 @@ class ResourceRegistry:
         self.register("unusedComputers", ComputerHandler)
         self.register("unusedComputerGroups", ComputerGroupHandler)
         self.register("unusedMacApps", MacAppsHandler)
-        self.register("unusedMobileDeviceApps", MacAppsHandler)
         self.register("unusedPackages", PackageHandler)
         self.register("unusedPolicies", PolicyHandler)
         self.register("unusedComputerProfiles", ComputerConfigProfileHandler)

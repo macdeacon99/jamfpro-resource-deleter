@@ -5,9 +5,6 @@ from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
 
-# TODO This needs tested to see what the API returns? Does it return the package or does it return metadata
-
-
 class PackageHandler(ResourceHandler):
     resource_name = "Package"
 
@@ -23,5 +20,6 @@ class PackageHandler(ResourceHandler):
             )
             return None
 
+    # JamfPy SDK only returns metadata so can't re-create packages - Success based on this
     def create(self, resource_config: Dict) -> bool:
         return True
