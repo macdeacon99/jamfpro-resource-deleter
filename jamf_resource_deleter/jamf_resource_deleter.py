@@ -2,7 +2,6 @@
 of resources from Jamf Pro and then loops through and deletes the resources.
 """
 
-import os
 from typing import Optional
 from pathlib import Path
 from datetime import datetime
