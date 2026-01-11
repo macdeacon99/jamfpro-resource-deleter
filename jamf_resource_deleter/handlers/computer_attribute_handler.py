@@ -1,7 +1,7 @@
 import logging
 import json
-from pathlib import Path
 from typing import Optional, Dict
+from dicttoxml import dicttoxml
 from requests import HTTPError
 from .base import ResourceHandler
 
@@ -31,11 +31,22 @@ class ComputerAttributeHandler(ResourceHandler):
         # Set parameters
         # Use API to re-create resource
 
+        xml = self._convert_to_xml(resource_config)
+
         try:
             success = self.client.classic.computer_extension_attributes.create(
-                resource_config
+                xml
             )
 
             print(success.text)
         except HTTPError as e:
             print(f"Error: {e}")
+
+
+    def _convert_to_xml(self, resource_config):
+        data = json.loads(resource_config)
+
+        ee_data = data['configuration']['computer_extension_attribute']
+
+        return dicttoxml(ee_data, custom_root='computer_extension_attribute', attr_type=False)
+
