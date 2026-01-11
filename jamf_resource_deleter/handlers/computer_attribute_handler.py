@@ -29,7 +29,7 @@ class ComputerAttributeHandler(ResourceHandler):
             )
             return None
 
-    def create(self, resource_config: Dict) -> tuple[bool, str]:
+    def create(self, resource_config: Dict) -> tuple[bool, int]:
         xml = self._convert_to_xml(resource_config)
 
         try:

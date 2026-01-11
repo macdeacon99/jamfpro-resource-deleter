@@ -7,6 +7,7 @@ from pathlib import Path
 from datetime import datetime
 import json
 import logging
+from requests import Response, RequestException
 
 from jamfpy import Tenant
 from .backup_manager import BackupManager
@@ -102,7 +103,7 @@ class JamfResourceDeleter:
                 )
 
         try:
-            success = handler.delete(resource_id)
+            success: Response = handler.delete(resource_id)
 
             if success:
                 logger.info(
@@ -131,14 +132,15 @@ class JamfResourceDeleter:
                     resource_id=resource_id,
                     resource_name=resource_name,
                     status=OperationStatus.FAILED,
-                    error_message="Deletion returned false",
+                    error_message=success.text,
                 )
-        except Exception as e:
+        except RequestException as e:
             logger.error(
-                "Error deleting %s %s (ID: %s)",
+                "Error deleting %s %s (ID: %s): %s",
                 resource_type,
                 resource_name,
                 resource_id,
+                e,
             )
             return OperationResult(
                 resource_type=resource_type,

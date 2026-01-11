@@ -51,7 +51,7 @@ class ComputerConfigProfileHandler(ResourceHandler):
         profile_data = data.get("os_x_configuration_profile", {})
 
         # Prepare data for conversion
-        clean_data = {}
+        clean_data: Dict = {}
 
         # Handle general section
         if "general" in profile_data:

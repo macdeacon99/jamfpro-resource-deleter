@@ -1,6 +1,6 @@
 import logging
 from typing import Optional, Dict
-from requests import HTTPError
+from requests import HTTPError, Response
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class ComputerHandler(ResourceHandler):
     resource_name = "Computer"
 
-    def delete(self, resource_id: int) -> bool:
+    def delete(self, resource_id: int) -> Response:
         return self.client.classic.computers.delete_by_id(resource_id)
 
     def get(self, resource_id: int) -> Optional[Dict]:
