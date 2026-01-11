@@ -24,7 +24,7 @@ class JamfResourceDeleter:
     def __init__(
         self,
         jamfpy_client: Tenant,
-        backup_dir: Optional[str] = None,
+        backup_dir: Optional[Path] = None,
         registry: Optional[ResourceRegistry] = None,
         configure_logging: bool = True
     ):
