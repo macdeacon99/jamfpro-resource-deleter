@@ -23,5 +23,5 @@ class PackageHandler(ResourceHandler):
             )
             return None
 
-    def create(self, resource_config: Dict):
-        pass
+    def create(self, resource_config: Dict) -> bool:
+        return True
