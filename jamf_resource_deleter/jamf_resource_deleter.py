@@ -26,7 +26,7 @@ class JamfResourceDeleter:
         jamfpy_client: Tenant,
         backup_dir: Optional[Path] = None,
         registry: Optional[ResourceRegistry] = None,
-        configure_logging: bool = True
+        configure_logging: bool = True,
     ):
         """
 
@@ -40,10 +40,9 @@ class JamfResourceDeleter:
             root_logger = logging.getLogger()
             if not root_logger.handlers:
                 logging.basicConfig(
-                    level=logging.INFO,
-                    format='%(levelname)s - %(message)s'
+                    level=logging.INFO, format="%(levelname)s - %(message)s"
                 )
-        
+
         self.logger = logging.getLogger(__name__)
 
         self.client = jamfpy_client
@@ -243,7 +242,7 @@ class JamfResourceDeleter:
         return self.backup_manager.list_backups()
 
     def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
-        """TODO WORK IN PROGRESS"""
+        """This will restore resources from backup file"""
 
         backup_path = self.backup_path / backup_filename
 
@@ -274,7 +273,9 @@ class JamfResourceDeleter:
 
                 # TODO - Create a CreationResult class
                 if dry_run:
-                    logger.info("[DRY-RUN] Would restore %s: %s", resource_type, resource_name)
+                    logger.info(
+                        "[DRY-RUN] Would restore %s: %s", resource_type, resource_name
+                    )
                 else:
                     logger.info("Restoring %s: %s", resource_type, resource_name)
                     try:
@@ -285,19 +286,20 @@ class JamfResourceDeleter:
                                 "Successfully re-created %s %s: %s",
                                 resource_type,
                                 resource_name,
-                                status_code
+                                status_code,
                             )
                         else:
                             logger.warning(
                                 "Failed to re-create %s %s: %s",
                                 resource_type,
                                 resource_name,
-                                status_code
+                                status_code,
                             )
                     except Exception as e:
                         logger.error(
                             "Error re-creating %s %s: %s",
                             resource_type,
                             resource_name,
-                            e
+                            e,
                         )
+                print({"=" * 50})
