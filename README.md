@@ -28,7 +28,7 @@ pip install jamf-resource-deleter
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.9+
 - [JamfPy SDK](https://github.com/thejoeker12/jamfpy-python-sdk-jamfpro)
 - Access to a Jamf Pro instance with appropriate API credentials
 
