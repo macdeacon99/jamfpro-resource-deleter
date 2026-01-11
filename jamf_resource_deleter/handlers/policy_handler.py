@@ -27,7 +27,7 @@ class PolicyHandler(ResourceHandler):
         xml = self._policy_json_to_jamf_xml(resource_config)
 
         try:
-            success = self.client.classic.computer_extension_attributes.create(xml)
+            success = self.client.classic.policies.create(xml)
             print(success.text)
             return success.ok, success.status_code
         except HTTPError as e:
