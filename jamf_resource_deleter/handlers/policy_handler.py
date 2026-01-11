@@ -75,30 +75,60 @@ class PolicyHandler(ResourceHandler):
 
         return value
 
+    def _normalize_triggers(self, general: dict):
+        triggers = []
+
+        if general.pop("trigger_checkin", False):
+            triggers.append("checkin")
+
+        if general.pop("trigger_login", False):
+            triggers.append("login")
+
+        if general.pop("trigger_startup", False):
+            triggers.append("startup")
+
+        if general.pop("trigger_enrollment_complete", False):
+            triggers.append("enrollment")
+
+        # USER_INITIATED == selfservice
+        if general.pop("trigger_other", None) == "USER_INITIATED":
+            triggers.append("selfservice")
+
+        # Remove invalid fields
+        general.pop("trigger", None)
+
+        # Inject correct Classic API triggers
+        if triggers:
+            general["trigger"] = triggers
 
     def _policy_json_to_jamf_xml(self, policy_json: dict) -> str:
-        policy = policy_json["policy"]
+            policy = policy_json["policy"]
 
-        # --- GENERAL CLEANUP ---
-        policy["general"].pop("id", None)
-        policy["general"].pop("retry_attempts", None)
-        policy["general"].pop("network_requirements", None)
+            # --- GENERAL CLEANUP ---
+            general = policy["general"]
+            general.pop("id", None)
+            general.pop("retry_attempts", None)
+            general.pop("network_requirements", None)
 
-        # --- PACKAGE CONFIG ---
-        if "package_configuration" in policy:
-            policy["packages"] = policy["package_configuration"]["packages"]
-            del policy["package_configuration"]
+            # 🔴 THIS IS THE IMPORTANT LINE
+            self._normalize_triggers(general)
 
-        # --- REMOVE INVALID KEYS ---
-        policy.pop("printers", None)
+            # --- PACKAGE CONFIG ---
+            if "package_configuration" in policy:
+                policy["packages"] = policy["package_configuration"]["packages"]
+                del policy["package_configuration"]
 
-        normalized = self._normalize(policy)
+            # --- REMOVE INVALID KEYS ---
+            policy.pop("printers", None)
 
-        xml = dicttoxml(
-            normalized,
-            custom_root="policy",
-            attr_type=False
-        )
-        print(xml)
-        dom = parseString(xml)
-        return dom.toprettyxml(indent="  ")
+            # --- NORMALIZE FOR XML ---
+            normalized = self._normalize(policy)
+
+            xml = dicttoxml(
+                normalized,
+                custom_root="policy",
+                attr_type=False
+            )
+
+            dom = parseString(xml)
+            return dom.toprettyxml(indent="  ")
