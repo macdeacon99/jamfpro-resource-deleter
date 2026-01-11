@@ -12,9 +12,9 @@ This tool is designed to work alongside tools like **Prune**, allowing you to id
 
 - [ ] Develop Restore Functionality
 - [ ] Tidy Up Documentation
-    - [ ] Add in new features like custom registry object
-    - [ ] Add new logging information
-    - [ ] Add new structure
+  - [ ] Add in new features like how to create custom registry object
+  - [ ] Add new logging information
+  - [ ] Add new structure
 - [x] Split into multiple files for future growth
 
 ---
