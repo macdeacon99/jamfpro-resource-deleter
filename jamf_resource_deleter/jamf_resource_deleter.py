@@ -11,7 +11,7 @@ import logging
 from jamfpy import Tenant
 from .backup_manager import BackupManager
 from .resource_registry import ResourceRegistry
-from .models import DeletionResult, BatchResult, OperationStatus
+from .models import OperationResult, BatchResult, OperationStatus
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +24,9 @@ class JamfResourceDeleter:
     def __init__(
         self,
         jamfpy_client: Tenant,
-        backup_dir: Optional[str] = None,
+        backup_dir: Optional[Path] = None,
         registry: Optional[ResourceRegistry] = None,
-        configure_logging: bool = True
+        configure_logging: bool = True,
     ):
         """
 
@@ -40,21 +40,20 @@ class JamfResourceDeleter:
             root_logger = logging.getLogger()
             if not root_logger.handlers:
                 logging.basicConfig(
-                    level=logging.INFO,
-                    format='%(levelname)s - %(message)s'
+                    level=logging.INFO, format="%(levelname)s - %(message)s"
                 )
-        
+
         self.logger = logging.getLogger(__name__)
 
         self.client = jamfpy_client
         self.backup_dir = backup_dir
 
         if backup_dir:
-            backup_path = Path(backup_dir)
+            self.backup_path = Path(backup_dir)
         else:
-            backup_path = Path(__file__).parent / "backups"
+            self.backup_path = Path(__file__).parent / "backups"
 
-        self.backup_manager = BackupManager(backup_path)
+        self.backup_manager = BackupManager(self.backup_path)
 
         self.registry = registry or ResourceRegistry()
 
@@ -64,7 +63,7 @@ class JamfResourceDeleter:
         resource_id: int,
         resource_name: str = "Unknown",
         export: bool = False,
-    ) -> DeletionResult:
+    ) -> OperationResult:
         """Delete a single resource
 
         Args:
@@ -74,14 +73,14 @@ class JamfResourceDeleter:
             export (bool, optional): _description_. Defaults to False.
 
         Returns:
-            DeletionResult: _description_
+            OperationResult: _description_
         """
 
         handler_class = self.registry.get_handler_class(resource_type)
 
         if not handler_class:
             logger.error("Unknown resource type: %s", resource_type)
-            return DeletionResult(
+            return OperationResult(
                 resource_type=resource_type,
                 resource_id=resource_id,
                 resource_name=resource_name,
@@ -112,7 +111,7 @@ class JamfResourceDeleter:
                     resource_name,
                     resource_id,
                 )
-                return DeletionResult(
+                return OperationResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
@@ -126,7 +125,7 @@ class JamfResourceDeleter:
                     resource_name,
                     resource_id,
                 )
-                return DeletionResult(
+                return OperationResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
@@ -140,7 +139,7 @@ class JamfResourceDeleter:
                 resource_name,
                 resource_id,
             )
-            return DeletionResult(
+            return OperationResult(
                 resource_type=resource_type,
                 resource_id=resource_id,
                 resource_name=resource_name,
@@ -162,6 +161,9 @@ class JamfResourceDeleter:
         Returns:
             BatchResult: _description_
         """
+
+        # TODO - Add functionality to remove deleted resources from JSON file
+        # TODO - Add error handling in if resource is already deleted
 
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
@@ -185,7 +187,7 @@ class JamfResourceDeleter:
 
                 if dry_run:
                     logger.info(
-                        "[DRY-RUN] Would delete %s:%s (ID: %s)",
+                        "[DRY-RUN] Would delete %s: %s (ID: %s)",
                         resource_type,
                         resource_name,
                         resource_id,
@@ -194,7 +196,7 @@ class JamfResourceDeleter:
                         logger.info("[DRY-RUN] Would backup configuration first")
 
                     results.append(
-                        DeletionResult(
+                        OperationResult(
                             resource_type=resource_type,
                             resource_id=resource_id,
                             resource_name=resource_name,
@@ -239,10 +241,12 @@ class JamfResourceDeleter:
         """List all backup files"""
         return self.backup_manager.list_backups()
 
-    def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
-        """TODO WORK IN PROGRESS"""
+    def restore_from_backup(
+        self, backup_filename: str, dry_run: bool = True
+    ) -> BatchResult:
+        """This will restore resources from backup file"""
 
-        backup_path = self.backup_dir / backup_filename
+        backup_path = self.backup_path / backup_filename
 
         if not backup_path.exists():
             raise FileNotFoundError(f"Backup file not found: {backup_path}")
@@ -254,6 +258,8 @@ class JamfResourceDeleter:
         print(f"Restoring from backup: {backup_filename}")
         print(f"{'=' * 50}")
 
+        results = []
+
         for resource_type, resources in backup_data.items():
             handler_class = self.registry.get_handler_class(resource_type)
 
@@ -263,40 +269,70 @@ class JamfResourceDeleter:
 
             handler = handler_class(self.client)
 
-            print(f"\nRestoring {resource_type}...")
+            logger.info("\nRestoring %s...", resource_type)
 
             for resource in resources:
                 resource_name = resource.get("name", "Unkown")
                 resource_config = resource.get("configuration")
 
+                if dry_run:
+                    logger.info(
+                        "[DRY-RUN] Would restore %s: %s", resource_type, resource_name
+                    )
+                else:
+                    logger.info("Restoring %s: %s", resource_type, resource_name)
+                    try:
+                        success, status_code = handler.create(resource_config)
 
-            # TODO - Create a CreationResult class
-            if dry_run:
-                print(f"[DRY-RUN] Would restore {resource_type}: {resource_name}")
-            else:
-                print(f"Restoring {resource_type}: {resource_name}...")
-                try:
-                    success = handler.create(resource_config)
-
-                    if success:
-                        logger.info(
-                            "Successfully re-created %s %s",
-                            resource_type,
-                            resource_name
-                        )
-                        return True
-                    else:
-                        logger.warning(
-                            "Failed to re-create %s %s",
+                        if success:
+                            logger.info(
+                                "Successfully re-created %s %s: %s",
+                                resource_type,
+                                resource_name,
+                                status_code,
+                            )
+                            results.append(
+                                OperationResult(
+                                    resource_type=resource_type,
+                                    resource_name=resource_name,
+                                    resource_id=0,
+                                    status=OperationStatus.SUCCESS,
+                                )
+                            )
+                        else:
+                            logger.warning(
+                                "Failed to re-create %s %s: %s",
+                                resource_type,
+                                resource_name,
+                                status_code,
+                            )
+                            results.append(
+                                OperationResult(
+                                    resource_type=resource_type,
+                                    resource_name=resource_name,
+                                    resource_id=0,
+                                    status=OperationStatus.FAILED,
+                                    error_message=status_code,
+                                )
+                            )
+                    except Exception as e:
+                        logger.error(
+                            "Error re-creating %s %s: %s",
                             resource_type,
                             resource_name,
+                            e,
                         )
-                        return False
-                except Exception as e:
-                    logger.error(
-                        "Error re-creating %s %s: %s",
-                        resource_type,
-                        resource_name,
-                        e
-                    )
-                    return False
+                print({"=" * 50})
+
+            batch_result = BatchResult(
+                total_processed=len(results),
+                successful=sum(
+                    1 for r in results if r.status == OperationStatus.SUCCESS
+                ),
+                failed=sum(1 for r in results if r.status == OperationStatus.FAILED),
+                skipped=sum(1 for r in results if r.status == OperationStatus.SKIPPED),
+                results=results,
+                backup_path=backup_path,
+            )
+
+            return batch_result
