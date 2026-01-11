@@ -36,13 +36,6 @@ class ComputerConfigProfileHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["os_x_configuration_profile"]
-
-        return dicttoxml(
-            ee_data, custom_root="os_x_configuration_profile", attr_type=False
-        )
-
     def _json_to_jamf_profile_xml_dicttoxml(self, config_data):
         """
         Convert configuration profile data to Jamf Pro API XML format using dicttoxml.
