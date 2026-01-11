@@ -23,7 +23,7 @@ class PolicyHandler(ResourceHandler):
             return None
 
     def create(self, resource_config: Dict) -> bool:
-        xml = self._convert_to_xml(resource_config)
+        xml = self._policy_json_to_jamf_xml(resource_config)
 
         try:
             success = self.client.classic.computer_extension_attributes.create(xml)
@@ -33,9 +33,75 @@ class PolicyHandler(ResourceHandler):
             logger.error("Error: %s", e)
             return success.ok, success.status_code
 
-    def _convert_to_xml(self, resource_config):
-        ee_data = resource_config["policy"]
+    JAMF_ALLOWED_TOP_LEVEL_KEYS = {
+        "general",
+        "scope",
+        "self_service",
+        "packages",
+        "scripts",
+        "printers",
+        "dock_items",
+        "account_maintenance",
+        "reboot",
+        "maintenance",
+        "files_processes",
+        "user_interaction",
+        "disk_encryption"
+    }
 
-        return dicttoxml(
-            ee_data, custom_root="policy", attr_type=False
+
+    def _normalize_for_jamf(self, value):
+        """
+        Recursively normalize JSON so Jamf accepts the XML:
+        - Booleans -> 'true' / 'false'
+        - Empty lists -> empty dict (Jamf hates <item/>)
+        - Remove None values
+        """
+        if isinstance(value, bool):
+            return "true" if value else "false"
+
+        if isinstance(value, dict):
+            return {
+                k: self._normalize_for_jamf(v)
+                for k, v in value.items()
+                if v is not None
+            }
+
+        if isinstance(value, list):
+            if not value:
+                return {}  # Jamf expects empty parent nodes
+            return [self._normalize_for_jamf(v) for v in value]
+
+        return value
+
+
+    def _policy_json_to_jamf_xml(self, policy_json: dict) -> str:
+        """
+        Convert Jamf policy JSON to Jamf Classic API XML
+        """
+
+        policy = policy_json["configuration"]["policy"]
+
+        # Remove UI / read-only fields Jamf rejects
+        policy.get("general", {}).pop("id", None)
+
+        # Convert package_configuration → packages
+        if "package_configuration" in policy:
+            policy["packages"] = policy["package_configuration"].get("packages", [])
+            policy.pop("package_configuration")
+
+        # Remove unsupported top-level keys
+        policy = {
+            k: v for k, v in policy.items()
+            if k in self.JAMF_ALLOWED_TOP_LEVEL_KEYS
+        }
+
+        normalized_policy = self._normalize_for_jamf(policy)
+
+        xml_bytes = dicttoxml(
+            normalized_policy,
+            custom_root="policy",
+            attr_type=False
         )
+
+        return xml_bytes
