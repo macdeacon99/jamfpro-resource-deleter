@@ -112,9 +112,7 @@ class ComputerGroupHandler(ResourceHandler):
         xml_string = xml_string.replace('<is_smart>True</is_smart>', '<is_smart>true</is_smart>')
         xml_string = xml_string.replace('<is_smart>False</is_smart>', '<is_smart>false</is_smart>')
         
-        # Pretty print
-        dom = parseString(xml_string)
-        return dom.toprettyxml(indent="  ")
+        return xml_string
 
 
     def _convert_all_unused_groups(self, json_data):
