@@ -334,7 +334,7 @@ Contributions are welcome! Please feel free to submit issues, fork the repositor
 
 ## License
 
-[Apache2.0](.LICENSE)
+[Apache2.0](LICENSE)
 
 ## Acknowledgments
 
@@ -343,7 +343,7 @@ Contributions are welcome! Please feel free to submit issues, fork the repositor
 
 ## Support
 
-For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/yourusername/jamf-resource-deleter).
+For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/macdeacon99/jamf-resource-deleter).
 
 ## Changelog
 
