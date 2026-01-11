@@ -36,9 +36,10 @@ class ComputerAttributeHandler(ResourceHandler):
                 xml
             )
 
-            print(success.ok)
+            return success.ok
         except HTTPError as e:
             print(f"Error: {e}")
+            return False
 
 
     def _convert_to_xml(self, resource_config):
