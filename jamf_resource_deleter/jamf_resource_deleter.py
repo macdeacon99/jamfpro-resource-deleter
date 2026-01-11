@@ -50,11 +50,11 @@ class JamfResourceDeleter:
         self.backup_dir = backup_dir
 
         if backup_dir:
-            backup_path = Path(backup_dir)
+            self.backup_path = Path(backup_dir)
         else:
-            backup_path = Path(__file__).parent / "backups"
+            self.backup_path = Path(__file__).parent / "backups"
 
-        self.backup_manager = BackupManager(backup_path)
+        self.backup_manager = BackupManager(self.backup_path)
 
         self.registry = registry or ResourceRegistry()
 
@@ -242,7 +242,7 @@ class JamfResourceDeleter:
     def restore_from_backup(self, backup_filename: str, dry_run: bool = True):
         """TODO WORK IN PROGRESS"""
 
-        backup_path = self.backup_dir / backup_filename
+        backup_path = self.backup_path / backup_filename
 
         if not backup_path.exists():
             raise FileNotFoundError(f"Backup file not found: {backup_path}")
