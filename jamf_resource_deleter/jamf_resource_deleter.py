@@ -286,14 +286,12 @@ class JamfResourceDeleter:
                                 resource_type,
                                 resource_name
                             )
-                            print("Complete")
                         else:
                             logger.warning(
                                 "Failed to re-create %s %s",
                                 resource_type,
                                 resource_name,
                             )
-                            print("Not Complete")
                     except Exception as e:
                         logger.error(
                             "Error re-creating %s %s: %s",
@@ -301,4 +299,3 @@ class JamfResourceDeleter:
                             resource_name,
                             e
                         )
-                        print("Not Working")

@@ -5,6 +5,8 @@ from requests import HTTPError
 from .base import ResourceHandler
 
 logger = logging.getLogger(__name__)
+dicttoxml_logger = logging.getLogger('dicttoxml')
+dicttoxml_logger.setLevel(logging.ERROR)
 
 
 class ComputerAttributeHandler(ResourceHandler):
