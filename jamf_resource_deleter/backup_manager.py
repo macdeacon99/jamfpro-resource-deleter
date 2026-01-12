@@ -27,7 +27,7 @@ class BackupManager:
 
         # Have you verified this always appends correctly and makes the file if not?
         # what if you run the tool twice on the same dir? I'm not sure how right I am.
-        with open(backup_path, "w") as f:
+        with open(backup_path, "w", encoding="utf-8") as f:
             json.dump(backup_data, f, indent=2)
 
         return str(backup_path)
@@ -47,5 +47,5 @@ class BackupManager:
         if not backup_path.exists():
             raise FileNotFoundError(f"Backup file not found: {backup_path}")
 
-        with open(backup_path, "r") as f:
+        with open(backup_path, "r", encoding="utf-8") as f:
             return json.load(f)

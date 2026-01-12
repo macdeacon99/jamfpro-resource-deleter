@@ -159,9 +159,9 @@ class JamfResourceDeleter:
 
 
     def delete_from_json(
-        self, 
-        json_file_path: Path, 
-        dry_run: bool = True, 
+        self,
+        json_file_path: Path,
+        dry_run: bool = True,
         export: bool = False
     ) -> BatchResult:
         """Delete resources from a JSON file
@@ -178,10 +178,10 @@ class JamfResourceDeleter:
         if not json_file_path.exists():
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
 
-        with open(json_file_path, "r") as f:
+        with open(json_file_path, "r", encoding="utf-8") as f:
             unused_resources = json.load(f)
 
-        # Same comments regarding timestamps in the backup_manager.py file 
+        # Same comments regarding timestamps in the backup_manager.py file
         timestamp = datetime.now().strftime("%d%m%Y%H%M%S")
         session_backups: Dict[str, list[Dict[str, Any]]] = {}
         results = []
@@ -255,8 +255,8 @@ class JamfResourceDeleter:
 
 
     def restore_from_backup(
-        self, 
-        backup_filename: str, 
+        self,
+        backup_filename: str,
         dry_run: bool = True
     ) -> Optional[BatchResult]:
         """This will restore resources from backup file"""
@@ -266,9 +266,9 @@ class JamfResourceDeleter:
         if not backup_path.exists():
             raise FileNotFoundError(f"Backup file not found: {backup_path}")
 
-        with open(backup_path, "r") as f:
+        with open(backup_path, "r", encoding="utf-8") as f:
             backup_data = json.load(f)
-        
+
         line_breaker = 50 * "="
         print(f"\n{line_breaker}Restoring from backup: {backup_filename}\n{line_breaker}")
 
@@ -333,7 +333,6 @@ class JamfResourceDeleter:
                         logger.error(
                             "Error re-creating %s %s: %s",
                             resource_type,
-                            resource_name,
                             e,
                         )
                 print({"=" * 50})
