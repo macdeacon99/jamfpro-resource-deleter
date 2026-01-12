@@ -103,37 +103,42 @@ class JamfResourceDeleter:
                 )
 
         try:
-            success: Response = handler.delete(resource_id)
 
-            if success:
-                logger.info(
-                    "Successfully deleted %s %s (ID: %s)",
-                    resource_type,
-                    resource_name,
-                    resource_id,
-                )
-                return OperationResult(
-                    resource_type=resource_type,
-                    resource_id=resource_id,
-                    resource_name=resource_name,
-                    status=OperationStatus.SUCCESS,
-                    backup_data=backup_data,
-                )
-            else:
+            # This just returns a response object, I think it should be like this:
+            response: Response = handler.delete(resource_id)
+
+            # Moved this up here to clear the errors first, then proceed.
+            if not response.ok:
                 logger.warning(
                     "Failed to delete %s %s (ID: %s): %s",
                     resource_type,
                     resource_name,
                     resource_id,
-                    success.text,
+                    response.text,
                 )
                 return OperationResult(
                     resource_type=resource_type,
                     resource_id=resource_id,
                     resource_name=resource_name,
                     status=OperationStatus.FAILED,
-                    error_message=success.text,
+                    error_message=response.text,
                 )
+
+            logger.info(
+                "Successfully deleted %s %s (ID: %s)",
+                resource_type,
+                resource_name,
+                resource_id,
+            )
+            return OperationResult(
+                resource_type=resource_type,
+                resource_id=resource_id,
+                resource_name=resource_name,
+                status=OperationStatus.SUCCESS,
+                backup_data=backup_data,
+            )
+
+        # Have you verified this is the correct error type?
         except RequestException as e:
             logger.error(
                 "Error deleting %s %s (ID: %s): %s",
@@ -142,6 +147,7 @@ class JamfResourceDeleter:
                 resource_id,
                 e,
             )
+
             return OperationResult(
                 resource_type=resource_type,
                 resource_id=resource_id,
@@ -151,8 +157,12 @@ class JamfResourceDeleter:
                 backup_data=backup_data,
             )
 
+
     def delete_from_json(
-        self, json_file_path: Path, dry_run: bool = True, export: bool = False
+        self, 
+        json_file_path: Path, 
+        dry_run: bool = True, 
+        export: bool = False
     ) -> BatchResult:
         """Delete resources from a JSON file
 
@@ -171,6 +181,7 @@ class JamfResourceDeleter:
         with open(json_file_path, "r") as f:
             unused_resources = json.load(f)
 
+        # Same comments regarding timestamps in the backup_manager.py file 
         timestamp = datetime.now().strftime("%d%m%Y%H%M%S")
         session_backups: Dict[str, list[Dict[str, Any]]] = {}
         results = []
@@ -222,11 +233,13 @@ class JamfResourceDeleter:
                         )
 
         backup_path = None
+
+        # The order of these matters in terms of Python computation, could it be simplified?
         if export and not dry_run and session_backups:
             backup_path = self.backup_manager.save_backup(session_backups, timestamp)
             logger.info("Backup saved to: %s", backup_path)
 
-        batch_result = BatchResult(
+        return BatchResult(
             total_processed=len(results),
             successful=sum(1 for r in results if r.status == OperationStatus.SUCCESS),
             failed=sum(1 for r in results if r.status == OperationStatus.FAILED),
@@ -235,14 +248,16 @@ class JamfResourceDeleter:
             backup_path=backup_path,
         )
 
-        return batch_result
 
     def list_backups(self) -> list:
         """List all backup files"""
         return self.backup_manager.list_backups()
 
+
     def restore_from_backup(
-        self, backup_filename: str, dry_run: bool = True
+        self, 
+        backup_filename: str, 
+        dry_run: bool = True
     ) -> Optional[BatchResult]:
         """This will restore resources from backup file"""
 
@@ -253,10 +268,9 @@ class JamfResourceDeleter:
 
         with open(backup_path, "r") as f:
             backup_data = json.load(f)
-
-        print(f"\n{'=' * 50}")
-        print(f"Restoring from backup: {backup_filename}")
-        print(f"{'=' * 50}")
+        
+        line_breaker = 50 * "="
+        print(f"\n{line_breaker}Restoring from backup: {backup_filename}\n{line_breaker}")
 
         results = []
 
@@ -282,9 +296,9 @@ class JamfResourceDeleter:
                 else:
                     logger.info("Restoring %s: %s", resource_type, resource_name)
                     try:
-                        success, status_code = handler.create(resource_config)
+                        response, status_code = handler.create(resource_config)
 
-                        if success:
+                        if response:
                             logger.info(
                                 "Successfully re-created %s %s: %s",
                                 resource_type,

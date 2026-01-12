@@ -26,6 +26,9 @@ class PolicyHandler(ResourceHandler):
         xml = self._convert_to_xml(resource_config)
 
         try:
+
+            # This isn't success at this point, I'd rename the variable response.
+            # Only a readability concern.
             success = self.client.classic.policies.create(xml)
             return success.ok, success.status_code
         except RequestException as e:

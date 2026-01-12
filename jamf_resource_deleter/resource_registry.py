@@ -20,6 +20,7 @@ class ResourceRegistry:
         self._handlers: Dict[str, Type[ResourceHandler]] = {}
         self._register_default_handlers()
 
+    # This could be simplified to self["key"] = class, removing the need for the register function
     def _register_default_handlers(self):
         """Register all default resource handlers"""
         self.register("unusedComputers", ComputerHandler)
