@@ -162,6 +162,8 @@ class JamfResourceDeleter:
         self,
         json_file_path: Path,
         dry_run: bool = True,
+
+        # What does export mean? I assume it means save?
         export: bool = False
     ) -> BatchResult:
         """Delete resources from a JSON file
@@ -179,11 +181,14 @@ class JamfResourceDeleter:
             raise FileNotFoundError(f"JSON file not found: {json_file_path}")
 
         with open(json_file_path, "r", encoding="utf-8") as f:
-            unused_resources = json.load(f)
+            unused_resources: dict = json.load(f)
 
         # Same comments regarding timestamps in the backup_manager.py file
         timestamp = datetime.now().strftime("%d%m%Y%H%M%S")
+
+        # This is a very complex type annotation.
         session_backups: Dict[str, list[Dict[str, Any]]] = {}
+
         results = []
 
         for resource_type, resource_list in unused_resources.items():
@@ -192,10 +197,19 @@ class JamfResourceDeleter:
             if export and not dry_run:
                 session_backups[resource_type] = []
 
-            for resource in resource_list:
-                resource_id = resource.get("id")
-                resource_name = resource.get("name")
+            for r in resource_list:
+                r: dict
+                resource_id = r.get("id")
+                resource_name = r.get("name")
 
+                # Suggestion: What if either of those return None?
+                # If you're certain this would never be a case, disregard it.
+                if not resource_id or not resource_name:
+                    # do something
+                    pass
+
+
+                # Removed the else and just added a continue, which skips to the next iteration.
                 if dry_run:
                     logger.info(
                         "[DRY-RUN] Would delete %s: %s (ID: %s)",
@@ -214,16 +228,18 @@ class JamfResourceDeleter:
                             status=OperationStatus.SKIPPED,
                         )
                     )
-                else:
-                    result = self.delete_resource(
-                        resource_type=resource_type,
-                        resource_id=resource_id,
-                        resource_name=resource_name,
-                        export=export,
-                    )
-                    results.append(result)
 
-                    if export and result.backup_data:
+                    continue
+
+                result = self.delete_resource(
+                    resource_type=resource_type,
+                    resource_id=resource_id,
+                    resource_name=resource_name,
+                    export=export,
+                )
+                results.append(result)
+
+                if export and result.backup_data:
                         session_backups[resource_type].append(
                             {
                                 "id": resource_id,
