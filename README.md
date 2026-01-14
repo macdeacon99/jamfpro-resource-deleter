@@ -308,6 +308,8 @@ This tool is designed to work seamlessly with [Prune](https://github.com/BIG-RAT
 - [ ] Add in error handling correctly
 - [ ] Add in restore of packages (once JamfPy has been updated)
 - [ ] Fix: Backup dry run doesn't return a skipped OperationResult
+- [ ] Add feature that will restore all dependencies first (scripts, packages, groups then policies etc.)
+- [ ] Add in functionality that will get new ID of re-created dependencies and use those for the re-creation of resources (deleted script + policy -> Re-create script, get new ID, use in the policy)
 - [x] Test Package export
 - [x] Test MacApps functionality
 - [x] Tidy Up Documentation
