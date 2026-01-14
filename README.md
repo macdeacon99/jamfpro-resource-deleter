@@ -303,9 +303,11 @@ This tool is designed to work seamlessly with [Prune](https://github.com/BIG-RAT
 ## Roadmap
 
 - [x] Develop Restore Functionality
-- [ ] Add in feature to allow restore of only a certain type of resource (as a list)
+- [ ] Add in feature to allow restore of only a certain type of resource (as a list) and only certain ID's
 - [ ] When resources are deleted from Jamf (successfully), also remove it from the JSON file so that if things fail, it can be re-ran
 - [ ] Add in error handling correctly
+- [ ] Add in restore of packages (once JamfPy has been updated)
+- [ ] Fix: Backup dry run doesn't return a skipped OperationResult
 - [x] Test Package export
 - [x] Test MacApps functionality
 - [x] Tidy Up Documentation
